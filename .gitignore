@@ -1,0 +1,8 @@
+node_modules/
+.vs/
+.vscode/
+.idea/
+#dist/
+test/
+.env
+.vercel

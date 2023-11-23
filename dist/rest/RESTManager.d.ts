@@ -1,0 +1,47 @@
+import { RequestHandler } from "./RequestHandler";
+import { AddAttachmentOptions, AddContactOptions, AddLedgerAccountOptions, AddNoteOptions, APIAdministration, APIContact, APIContactPerson, APICustomField, APIDocument, APIDocumentStyle, APIFinancialMutation, APILedgerAccount, APINote, APITaxRate, ContactPersonOptions, ContactSearchOptions, Document, DocumentAddOptions, DocumentEntityType, DocumentSearchOptions, DocumentUpdateOptions, EntityType, Filter, FinancialMutationLinkBookingOptions, FinancialMutationUnlinkBookingOptions, TaxRateSearchOptions, UpdateContactOptions, UpdateLedgerAccountOptions } from "../types";
+import { Administration, Contact, ContactPerson, FinancialMutation } from "../struct";
+import { LedgerAccount } from "../struct/LedgerAccount";
+export declare class RESTManager {
+    requestHandler: RequestHandler;
+    constructor(apiToken: string);
+    getAdministrations(): Promise<import("../types").Response<APIAdministration[]>>;
+    addAttachment(doc: Document, options: AddAttachmentOptions): Promise<import("../types").Response<void>>;
+    deleteAttachment(doc: Document, attachmentId: string): Promise<import("../types").Response<void>>;
+    synchronize(administration: Administration, entityType: EntityType, filter?: Filter): Promise<import("../types").Response<{
+        id: string;
+        version: number;
+    }[]>>;
+    listContactsByIds(administration: Administration, ids: Array<string>): Promise<import("../types").Response<APIContact[]>>;
+    getContacts(administration: Administration, urlOptions: ContactSearchOptions): Promise<import("../types").Response<APIContact[]>>;
+    getContact(administration: Administration, id: string): Promise<import("../types").Response<APIContact>>;
+    getContactByCustomerId(administration: Administration, customerId: string): Promise<import("../types").Response<APIContact>>;
+    addContact(administration: Administration, options: AddContactOptions): Promise<import("../types").Response<APIContact>>;
+    updateContact(contact: Contact, options: UpdateContactOptions): Promise<import("../types").Response<APIContact>>;
+    deleteContact(administration: Administration, contactId: string): Promise<import("../types").Response<void>>;
+    getContactPerson(contact: Contact, contactPersonId: string): Promise<import("../types").Response<APIContactPerson>>;
+    addContactPerson(contact: Contact, options: ContactPersonOptions): Promise<import("../types").Response<APIContactPerson>>;
+    updateContactPerson(contactPerson: ContactPerson, options: ContactPersonOptions): Promise<import("../types").Response<APIContactPerson>>;
+    deleteContactPerson(contact: Contact, contactPersonId: string): Promise<import("../types").Response<void>>;
+    getCustomFields(administration: Administration): Promise<import("../types").Response<APICustomField[]>>;
+    getDocumentStyles(administration: Administration): Promise<import("../types").Response<APIDocumentStyle[]>>;
+    listDocumentsByIds<T extends APIDocument>(administration: Administration, documentType: DocumentEntityType, ids: Array<string>): Promise<import("../types").Response<T[]>>;
+    getDocuments<T extends APIDocument>(administration: Administration, documentType: DocumentEntityType, urlOptions: DocumentSearchOptions): Promise<import("../types").Response<T[]>>;
+    getDocument<T extends APIDocument>(administration: Administration, documentType: DocumentEntityType, id: string): Promise<import("../types").Response<T>>;
+    addDocument<T extends APIDocument>(administration: Administration, documentType: DocumentEntityType, options: DocumentAddOptions): Promise<import("../types").Response<T>>;
+    updateDocument<T extends APIDocument>(document: Document, options: DocumentUpdateOptions, query?: string): Promise<import("../types").Response<T>>;
+    deleteDocument(administration: Administration, documentType: DocumentEntityType, documentId: string, refresh_journal_entries?: boolean): Promise<import("../types").Response<void>>;
+    addNote(entity: Contact | Document, options: AddNoteOptions): Promise<import("../types").Response<APINote>>;
+    deleteNote(entity: Contact | Document, noteId: string): Promise<import("../types").Response<void>>;
+    getFinancialMutations(administration: Administration, filter: Filter): Promise<import("../types").Response<APIFinancialMutation[]>>;
+    listFinancialMutationsByIds(administration: Administration, ids: Array<string>): Promise<import("../types").Response<APIFinancialMutation[]>>;
+    getFinancialMutation(administration: Administration, id: string): Promise<import("../types").Response<APIFinancialMutation>>;
+    financialMutationLinkBooking(financialMutation: FinancialMutation, options: FinancialMutationLinkBookingOptions): Promise<import("../types").Response<void>>;
+    financialMutationUnlinkBooking(financialMutation: FinancialMutation, options: FinancialMutationUnlinkBookingOptions): Promise<import("../types").Response<void>>;
+    getTaxRates(administration: Administration, filter: TaxRateSearchOptions): Promise<import("../types").Response<APITaxRate[]>>;
+    getLedgerAccounts(administration: Administration): Promise<import("../types").Response<APILedgerAccount[]>>;
+    getLedgerAccount(administration: Administration, id: string): Promise<import("../types").Response<APILedgerAccount>>;
+    addLedgerAccount(administration: Administration, options: AddLedgerAccountOptions): Promise<import("../types").Response<APILedgerAccount>>;
+    updateLedgerAccount(ledgerAccount: LedgerAccount, options: UpdateLedgerAccountOptions): Promise<import("../types").Response<APILedgerAccount>>;
+    deleteLedgerAccount(administration: Administration, ledgerAccountId: string): Promise<import("../types").Response<void>>;
+}

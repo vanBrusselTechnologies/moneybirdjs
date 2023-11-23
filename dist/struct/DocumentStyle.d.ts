@@ -1,0 +1,30 @@
+import { APIDocumentField, APIDocumentStyle } from "../types";
+import { Administration } from "./Administration";
+export declare class DocumentStyle {
+    administration: Administration;
+    id: string;
+    administration_id: string;
+    name: string;
+    identity_id: string;
+    default: boolean;
+    logo_hash: string;
+    logo_container_full_width: boolean;
+    logo_display_width: number;
+    logo_position: string;
+    background_hash: string;
+    paper_size: string;
+    address_position: string;
+    font_size: 9 | 10 | 11 | 12;
+    font_family: string;
+    print_on_stationery: boolean;
+    custom_css: string;
+    invoice_sender_address: APIDocumentField[];
+    invoice_metadata_left: APIDocumentField[];
+    invoice_metadata_right: APIDocumentField[];
+    estimate_sender_address: APIDocumentField[];
+    estimate_metadata_left: APIDocumentField[];
+    estimate_metadata_right: APIDocumentField[];
+    created_at: Date;
+    updated_at: Date;
+    constructor(administration: Administration, data: APIDocumentStyle);
+}
