@@ -10,6 +10,7 @@ import {Event} from "./Event";
 import {Attachment} from "./Attachment";
 import {DocumentDetail} from "./DocumentDetail";
 
+// noinspection JSUnusedGlobalSymbols
 export class ExternalSalesInvoice {
     public id: string;
     public administration_id: string;
@@ -142,11 +143,6 @@ export class ExternalSalesInvoice {
         this.events = data.events.map(e => new Event(this, e));
     }
 
-    /* todo downloadAttachment, maybe move function only in Attachment class?
-    async downloadAttachment(attachmentId: string) {
-    }
-    */
-
     /* todo: Payment
     async addPayment(options: AddPaymentOptions) {
         const {data} = await this.administration.client.rest.addPayment(this, options)
@@ -168,8 +164,4 @@ export class ExternalSalesInvoice {
     async markUncollectible(){
     }
     */
-
-    /* todo: CreateInvoiceFromAttachment
-       POST /external_sales_invoices/attachment(.:format)
-     */
 }

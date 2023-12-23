@@ -14,5 +14,6 @@ export * from './JournalDocument';
 export * from './Note';
 export * from './PurchaseInvoice';
 export * from './Receipt';
+export * from './SalesInvoice';
 export * from './TaxRate';
 export * from './TypelessDocument';

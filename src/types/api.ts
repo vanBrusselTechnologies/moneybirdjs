@@ -655,10 +655,10 @@ export interface APISalesInvoice {
     "contact_person": APIContactPerson | null,
     "invoice_id": string,
     "recurring_sales_invoice_id": string | null,
-    "workflow_id": string;
-    "document_style_id": string;
-    "identity_id": string;
-    "draft_id": string | null;
+    "workflow_id": string,
+    "document_style_id": string,
+    "identity_id": string,
+    "draft_id": string | null,
     "state": string,
     "invoice_date": string,
     "due_date": string | null,
@@ -696,11 +696,11 @@ export interface APISalesInvoice {
     "original_estimate_id": string | null,
     "url": string,
     "payment_url": string,
-    "custom_fields": APIInvoiceCustomField,
+    "custom_fields": APIInvoiceCustomField[],
     "notes": APINote[],
     "attachments": APIAttachment[],
     "events": APIEvent[],
-    tax_totals: APITaxTotals[]
+    "tax_totals": APITaxTotals[]
 }
 
 export interface APIInvoiceCustomField {

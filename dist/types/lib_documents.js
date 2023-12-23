@@ -20,3 +20,4 @@ __exportStar(require("./lib_documents_purchaseInvoice"), exports);
 __exportStar(require("./lib_documents_receipt"), exports);
 __exportStar(require("./lib_documents_typeless"), exports);
 __exportStar(require("./lib_externalSalesInvoice"), exports);
+__exportStar(require("./lib_salesInvoice"), exports);

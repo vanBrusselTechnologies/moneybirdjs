@@ -67,12 +67,40 @@ class RequestHandler {
                 return this.exec(path, options, ++retries);
             }
             if (res.status === 204)
-                return { data: {}, status: res.status, maxAge: 0, path, ok: true };
-            const data = await res.json();
+                return {
+                    data: {},
+                    status: 204,
+                    maxAge: 0,
+                    path,
+                    ok: true
+                };
+            let data = null;
+            if (res.body != null) {
+                data = res.body;
+                const chunks = [];
+                const reader = data.getReader();
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (value !== undefined)
+                        chunks.push(value);
+                    if (done)
+                        break;
+                }
+                const buffer = Buffer.concat(chunks);
+                try {
+                    data = JSON.parse(buffer.toString());
+                }
+                catch (e) {
+                    const contentDisposition = res.headers?.get('content-disposition');
+                    if (contentDisposition?.startsWith('attachment')) {
+                        data = buffer;
+                    }
+                }
+            }
             const isOk = res.status === 200 || res.status === 201;
             if (!isOk)
                 throw new Error(`non valid: ${res.status} ${JSON.stringify(data)}`);
-            return { data, status: res.status, maxAge: 0, path, ok: isOk };
+            return { data: data, status: res.status, maxAge: 0, path, ok: isOk };
             //https://developer.moneybird.com/#responses
         }
         catch (e) {
@@ -82,7 +110,13 @@ class RequestHandler {
             }
             if (this.rejectIfNotValid)
                 throw e;
-            return { data: { message: e.message }, maxAge: 0, status: 500, path, ok: false };
+            return {
+                data: { message: e.message },
+                maxAge: 0,
+                status: 500,
+                path,
+                ok: false
+            };
         }
     }
 }

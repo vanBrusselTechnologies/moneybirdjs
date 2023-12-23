@@ -1,9 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Attachment = void 0;
+// noinspection JSUnusedGlobalSymbols
+/** */
 class Attachment {
     constructor(entity, data) {
         this.entity = entity;
+        this.data = null;
         this.id = data.id;
         this.administration_id = data.administration_id;
         this.attachable_id = data.attachable_id;
@@ -18,6 +21,12 @@ class Attachment {
     /** Deletes this attachment and removes it from the entity */
     async delete() {
         await this.entity.administration.client.rest.deleteAttachment(this.entity, this.id);
+    }
+    /** Downloads this attachment */
+    async download() {
+        if (this.data == null)
+            this.data = (await this.entity.administration.client.rest.downloadAttachment(this.entity, this.id)).data;
+        return this.data;
     }
 }
 exports.Attachment = Attachment;

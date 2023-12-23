@@ -13,6 +13,7 @@ import {
     APIFinancialMutation,
     APILedgerAccount,
     APINote,
+    APISalesInvoice,
     APITaxRate,
     ContactPersonOptions,
     ContactSearchOptions,
@@ -61,6 +62,14 @@ export class RESTManager {
         const docPath = Util.entityRestUrl(Util.entityToEntityType(doc));
         return this.requestHandler.request<void>(`${doc.administration_id}/${docPath}/${doc.id}/attachments/${attachmentId}`, {
             method: "DELETE",
+            body: "{}"
+        })
+    }
+
+    public downloadAttachment(doc: Document, attachmentId: string) {
+        const docPath = Util.entityRestUrl(Util.entityToEntityType(doc));
+        return this.requestHandler.request<Buffer>(`${doc.administration_id}/${docPath}/${doc.id}/attachments/${attachmentId}/download`, {
+            method: "GET",
             body: "{}"
         })
     }
@@ -333,6 +342,20 @@ export class RESTManager {
     public deleteLedgerAccount(administration: Administration, ledgerAccountId: string) {
         return this.requestHandler.request<void>(`${administration.id}/ledger_accounts/${ledgerAccountId}`, {
             method: "DELETE",
+            body: "{}"
+        })
+    }
+
+    public getSalesInvoiceByInvoiceId(administration: Administration, salesInvoiceId: string) {
+        return this.requestHandler.request<APISalesInvoice>(`${administration.id}/sales_invoices/find_by_invoice_id/${salesInvoiceId}`, {
+            method: "GET",
+            body: "{}"
+        })
+    }
+
+    public getSalesInvoiceByReference(administration: Administration, salesInvoiceReference: string) {
+        return this.requestHandler.request<APISalesInvoice>(`${administration.id}/sales_invoices/find_by_reference/${salesInvoiceReference}`, {
+            method: "GET",
             body: "{}"
         })
     }

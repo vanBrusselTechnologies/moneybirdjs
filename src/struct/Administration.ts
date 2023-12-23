@@ -4,14 +4,14 @@ import {
     AddGeneralDocumentOptions,
     AddJournalDocumentOptions, AddLedgerAccountOptions,
     AddPurchaseInvoiceOptions,
-    AddReceiptOptions,
+    AddReceiptOptions, AddSalesInvoiceOptions,
     AddTypelessDocumentOptions,
     APIAdministration,
     APIExternalSalesInvoice,
     APIGeneralDocument,
-    APIJournalDocument, APILedgerAccount,
+    APIJournalDocument,
     APIPurchaseInvoice,
-    APIReceipt,
+    APIReceipt, APISalesInvoice,
     APITypelessDocument,
     ContactSearchOptions,
     EntityType,
@@ -20,7 +20,7 @@ import {
     GeneralDocumentSearchOptions,
     JournalDocumentSearchOptions,
     PurchaseInvoiceSearchOptions,
-    ReceiptSearchOptions,
+    ReceiptSearchOptions, SalesInvoiceSearchOptions,
     TaxRateSearchOptions,
     TypelessDocumentSearchOptions
 } from "../types";
@@ -33,6 +33,7 @@ import {GeneralDocument} from "./GeneralDocument";
 import {JournalDocument} from "./JournalDocument";
 import {PurchaseInvoice} from "./PurchaseInvoice";
 import {Receipt} from "./Receipt";
+import {SalesInvoice} from "./SalesInvoice";
 import {TaxRate} from "./TaxRate";
 import {TypelessDocument} from "./TypelessDocument";
 import {FinancialMutation} from "./FinancialMutation";
@@ -229,7 +230,6 @@ export class Administration {
     }
 
     //todo: Estimates
-    //todo: External Sales Invoices
 
     async listExternalSalesInvoicesByIds(ids: Array<string>) {
         const {data} = await this.client.rest.listDocumentsByIds<APIExternalSalesInvoice>(this, 'externalSalesInvoice', ids);
@@ -250,6 +250,8 @@ export class Administration {
         const {data} = await this.client.rest.addDocument<APIExternalSalesInvoice>(this, 'externalSalesInvoice', options)
         return new ExternalSalesInvoice(this, data)
     }
+
+    /* todo: https://developer.moneybird.com/api/external_sales_invoices/#post_external_sales_invoices_attachment */
 
     async deleteExternalSalesInvoice(externalSalesInvoiceId: string, refresh_journal_entries?: boolean) {
         await this.client.rest.deleteDocument(this, 'externalSalesInvoice', externalSalesInvoiceId, refresh_journal_entries)
@@ -303,6 +305,43 @@ export class Administration {
     //todo: Purchase transactions
     //todo: Recurring Sales Invoices
     //todo: Sales Invoices
+
+    async listSalesInvoicesByIds(ids: Array<string>) {
+        const {data} = await this.client.rest.listDocumentsByIds<APISalesInvoice>(this, 'salesInvoice', ids);
+        return data.map((entry) => new SalesInvoice(this, entry))
+    }
+
+    async getSalesInvoices(options: SalesInvoiceSearchOptions = {}) {
+        const {data} = await this.client.rest.getDocuments<APISalesInvoice>(this, 'salesInvoice', options)
+        return data.map((entry) => new SalesInvoice(this, entry))
+    }
+
+    async getSalesInvoice(salesInvoiceId: string) {
+        const {data} = await this.client.rest.getDocument<APISalesInvoice>(this, 'salesInvoice', salesInvoiceId)
+        return new SalesInvoice(this, data)
+    }
+
+    async getSalesInvoiceByInvoiceId(invoiceId: string) {
+        const {data} = await this.client.rest.getSalesInvoiceByInvoiceId(this, invoiceId)
+        return new SalesInvoice(this, data)
+    }
+
+    async getSalesInvoiceByReference(reference: string) {
+        const {data} = await this.client.rest.getSalesInvoiceByReference(this, reference)
+        return new SalesInvoice(this, data)
+    }
+
+    async addSalesInvoice(options: AddSalesInvoiceOptions) {
+        const {data} = await this.client.rest.addDocument<APISalesInvoice>(this, 'salesInvoice', options)
+        return new SalesInvoice(this, data)
+    }
+
+    async deleteSalesInvoice(salesInvoiceId: string, refresh_journal_entries?: boolean) {
+        await this.client.rest.deleteDocument(this, 'salesInvoice', salesInvoiceId, refresh_journal_entries)
+    }
+
+    // todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_send_reminders
+
     //todo: Subscriptions
 
     /** Returns a paginated list of all available tax rates for the administration */

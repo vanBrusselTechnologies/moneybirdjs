@@ -9,6 +9,7 @@ const GeneralDocument_1 = require("./GeneralDocument");
 const JournalDocument_1 = require("./JournalDocument");
 const PurchaseInvoice_1 = require("./PurchaseInvoice");
 const Receipt_1 = require("./Receipt");
+const SalesInvoice_1 = require("./SalesInvoice");
 const TaxRate_1 = require("./TaxRate");
 const TypelessDocument_1 = require("./TypelessDocument");
 const FinancialMutation_1 = require("./FinancialMutation");
@@ -162,7 +163,6 @@ class Administration {
         await this.client.rest.deleteDocument(this, 'typelessDocument', typelessDocumentId, refresh_journal_entries);
     }
     //todo: Estimates
-    //todo: External Sales Invoices
     async listExternalSalesInvoicesByIds(ids) {
         const { data } = await this.client.rest.listDocumentsByIds(this, 'externalSalesInvoice', ids);
         return data.map((entry) => new ExternalSalesInvoice_1.ExternalSalesInvoice(this, entry));
@@ -179,6 +179,7 @@ class Administration {
         const { data } = await this.client.rest.addDocument(this, 'externalSalesInvoice', options);
         return new ExternalSalesInvoice_1.ExternalSalesInvoice(this, data);
     }
+    /* todo: https://developer.moneybird.com/api/external_sales_invoices/#post_external_sales_invoices_attachment */
     async deleteExternalSalesInvoice(externalSalesInvoiceId, refresh_journal_entries) {
         await this.client.rest.deleteDocument(this, 'externalSalesInvoice', externalSalesInvoiceId, refresh_journal_entries);
     }
@@ -221,6 +222,34 @@ class Administration {
     //todo: Purchase transactions
     //todo: Recurring Sales Invoices
     //todo: Sales Invoices
+    async listSalesInvoicesByIds(ids) {
+        const { data } = await this.client.rest.listDocumentsByIds(this, 'salesInvoice', ids);
+        return data.map((entry) => new SalesInvoice_1.SalesInvoice(this, entry));
+    }
+    async getSalesInvoices(options = {}) {
+        const { data } = await this.client.rest.getDocuments(this, 'salesInvoice', options);
+        return data.map((entry) => new SalesInvoice_1.SalesInvoice(this, entry));
+    }
+    async getSalesInvoice(salesInvoiceId) {
+        const { data } = await this.client.rest.getDocument(this, 'salesInvoice', salesInvoiceId);
+        return new SalesInvoice_1.SalesInvoice(this, data);
+    }
+    async getSalesInvoiceByInvoiceId(invoiceId) {
+        const { data } = await this.client.rest.getSalesInvoiceByInvoiceId(this, invoiceId);
+        return new SalesInvoice_1.SalesInvoice(this, data);
+    }
+    async getSalesInvoiceByReference(reference) {
+        const { data } = await this.client.rest.getSalesInvoiceByReference(this, reference);
+        return new SalesInvoice_1.SalesInvoice(this, data);
+    }
+    async addSalesInvoice(options) {
+        const { data } = await this.client.rest.addDocument(this, 'salesInvoice', options);
+        return new SalesInvoice_1.SalesInvoice(this, data);
+    }
+    async deleteSalesInvoice(salesInvoiceId, refresh_journal_entries) {
+        await this.client.rest.deleteDocument(this, 'salesInvoice', salesInvoiceId, refresh_journal_entries);
+    }
+    // todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_send_reminders
     //todo: Subscriptions
     /** Returns a paginated list of all available tax rates for the administration */
     async getTaxRates(filter = { tax_rate_type: 'all' }) {

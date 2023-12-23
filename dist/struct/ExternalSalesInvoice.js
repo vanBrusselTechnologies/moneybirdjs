@@ -5,6 +5,7 @@ const Note_1 = require("./Note");
 const Event_1 = require("./Event");
 const Attachment_1 = require("./Attachment");
 const DocumentDetail_1 = require("./DocumentDetail");
+// noinspection JSUnusedGlobalSymbols
 class ExternalSalesInvoice {
     //public tax_totals: TaxTotals[];
     constructor(administration, data) {

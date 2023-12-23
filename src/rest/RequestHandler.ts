@@ -17,7 +17,7 @@ export class RequestHandler {
     private async exec<T>(path: string, options: RequestOptions, retries = 0): Promise<Response<T>> {
         try {
             let contentType = 'application/json';
-            if(options.additionalHeaders?.["content-type"]){
+            if (options.additionalHeaders?.["content-type"]) {
                 contentType = options.additionalHeaders["content-type"];
                 delete options.additionalHeaders["content-type"];
             }
@@ -35,14 +35,43 @@ export class RequestHandler {
                 return this.exec<T>(path, options, ++retries)
             }
 
-            if (res.status === 204) return {data: {} as unknown as T, status: res.status, maxAge: 0, path, ok: true}
+            if (res.status === 204) return {
+                data: {} as unknown as T,
+                status: 204,
+                maxAge: 0,
+                path,
+                ok: true
+            }
 
-            const data = await res.json()
+            let data = null;
+
+            if (res.body != null) {
+                data = res.body;
+                const chunks: Uint8Array[] = [];
+                const reader = data.getReader()
+                while (true) {
+                    const {value, done} = await reader.read()
+                    if (value !== undefined) chunks.push(value);
+                    if (done) break;
+                }
+                const buffer = Buffer.concat(chunks);
+
+                try{
+                    data = JSON.parse(buffer.toString())
+                }
+                catch (e) {
+                    const contentDisposition = res.headers?.get('content-disposition')
+                    if(contentDisposition?.startsWith('attachment')){
+                        data = buffer
+                    }
+                }
+            }
+
             const isOk = res.status === 200 || res.status === 201
 
             if (!isOk) throw new Error(`non valid: ${res.status} ${JSON.stringify(data)}`)
 
-            return {data, status: res.status, maxAge: 0, path, ok: isOk}
+            return {data: data as T, status: res.status, maxAge: 0, path, ok: isOk}
             //https://developer.moneybird.com/#responses
         } catch (e) {
             // fetch error timeout and rate-limit not reached yet -> Try again
@@ -50,7 +79,13 @@ export class RequestHandler {
                 return this.exec<T>(path, options, ++retries)
             }
             if (this.rejectIfNotValid) throw e
-            return {data: {message: (e as Error).message} as unknown as T, maxAge: 0, status: 500, path, ok: false};
+            return {
+                data: {message: (e as Error).message} as unknown as T,
+                maxAge: 0,
+                status: 500,
+                path,
+                ok: false
+            };
         }
     }
 }

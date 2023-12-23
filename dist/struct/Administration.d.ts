@@ -1,4 +1,4 @@
-import { AddContactOptions, AddExternalSalesInvoiceOptions, AddGeneralDocumentOptions, AddJournalDocumentOptions, AddLedgerAccountOptions, AddPurchaseInvoiceOptions, AddReceiptOptions, AddTypelessDocumentOptions, APIAdministration, ContactSearchOptions, EntityType, ExternalSalesInvoiceSearchOptions, Filter, GeneralDocumentSearchOptions, JournalDocumentSearchOptions, PurchaseInvoiceSearchOptions, ReceiptSearchOptions, TaxRateSearchOptions, TypelessDocumentSearchOptions } from "../types";
+import { AddContactOptions, AddExternalSalesInvoiceOptions, AddGeneralDocumentOptions, AddJournalDocumentOptions, AddLedgerAccountOptions, AddPurchaseInvoiceOptions, AddReceiptOptions, AddSalesInvoiceOptions, AddTypelessDocumentOptions, APIAdministration, ContactSearchOptions, EntityType, ExternalSalesInvoiceSearchOptions, Filter, GeneralDocumentSearchOptions, JournalDocumentSearchOptions, PurchaseInvoiceSearchOptions, ReceiptSearchOptions, SalesInvoiceSearchOptions, TaxRateSearchOptions, TypelessDocumentSearchOptions } from "../types";
 import { Client } from "../client/Client";
 import { Contact } from "./Contact";
 import { CustomField } from "./CustomField";
@@ -8,6 +8,7 @@ import { GeneralDocument } from "./GeneralDocument";
 import { JournalDocument } from "./JournalDocument";
 import { PurchaseInvoice } from "./PurchaseInvoice";
 import { Receipt } from "./Receipt";
+import { SalesInvoice } from "./SalesInvoice";
 import { TaxRate } from "./TaxRate";
 import { TypelessDocument } from "./TypelessDocument";
 import { FinancialMutation } from "./FinancialMutation";
@@ -80,6 +81,13 @@ export declare class Administration {
     getLedgerAccount(ledgerAccountId: string): Promise<LedgerAccount>;
     addLedgerAccount(options: AddLedgerAccountOptions): Promise<LedgerAccount>;
     deleteLedgerAccount(ledgerAccountId: string): Promise<void>;
+    listSalesInvoicesByIds(ids: Array<string>): Promise<SalesInvoice[]>;
+    getSalesInvoices(options?: SalesInvoiceSearchOptions): Promise<SalesInvoice[]>;
+    getSalesInvoice(salesInvoiceId: string): Promise<SalesInvoice>;
+    getSalesInvoiceByInvoiceId(invoiceId: string): Promise<SalesInvoice>;
+    getSalesInvoiceByReference(reference: string): Promise<SalesInvoice>;
+    addSalesInvoice(options: AddSalesInvoiceOptions): Promise<SalesInvoice>;
+    deleteSalesInvoice(salesInvoiceId: string, refresh_journal_entries?: boolean): Promise<void>;
     /** Returns a paginated list of all available tax rates for the administration */
     getTaxRates(filter?: TaxRateSearchOptions): Promise<TaxRate[]>;
 }

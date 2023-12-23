@@ -1,4 +1,6 @@
+/// <reference types="node" />
 import { APIAttachment, Document } from "../types";
+/** */
 export declare class Attachment {
     entity: Document;
     id: string;
@@ -11,7 +13,10 @@ export declare class Attachment {
     rotation: number;
     created_at: Date;
     updated_at: Date;
+    private data;
     constructor(entity: Document, data: APIAttachment);
     /** Deletes this attachment and removes it from the entity */
     delete(): Promise<void>;
+    /** Downloads this attachment */
+    download(): Promise<Buffer>;
 }

@@ -1,5 +1,6 @@
+/// <reference types="node" />
 import { RequestHandler } from "./RequestHandler";
-import { AddAttachmentOptions, AddContactOptions, AddLedgerAccountOptions, AddNoteOptions, APIAdministration, APIContact, APIContactPerson, APICustomField, APIDocument, APIDocumentStyle, APIFinancialMutation, APILedgerAccount, APINote, APITaxRate, ContactPersonOptions, ContactSearchOptions, Document, DocumentAddOptions, DocumentEntityType, DocumentSearchOptions, DocumentUpdateOptions, EntityType, Filter, FinancialMutationLinkBookingOptions, FinancialMutationUnlinkBookingOptions, TaxRateSearchOptions, UpdateContactOptions, UpdateLedgerAccountOptions } from "../types";
+import { AddAttachmentOptions, AddContactOptions, AddLedgerAccountOptions, AddNoteOptions, APIAdministration, APIContact, APIContactPerson, APICustomField, APIDocument, APIDocumentStyle, APIFinancialMutation, APILedgerAccount, APINote, APISalesInvoice, APITaxRate, ContactPersonOptions, ContactSearchOptions, Document, DocumentAddOptions, DocumentEntityType, DocumentSearchOptions, DocumentUpdateOptions, EntityType, Filter, FinancialMutationLinkBookingOptions, FinancialMutationUnlinkBookingOptions, TaxRateSearchOptions, UpdateContactOptions, UpdateLedgerAccountOptions } from "../types";
 import { Administration, Contact, ContactPerson, FinancialMutation } from "../struct";
 import { LedgerAccount } from "../struct/LedgerAccount";
 export declare class RESTManager {
@@ -8,6 +9,7 @@ export declare class RESTManager {
     getAdministrations(): Promise<import("../types").Response<APIAdministration[]>>;
     addAttachment(doc: Document, options: AddAttachmentOptions): Promise<import("../types").Response<void>>;
     deleteAttachment(doc: Document, attachmentId: string): Promise<import("../types").Response<void>>;
+    downloadAttachment(doc: Document, attachmentId: string): Promise<import("../types").Response<Buffer>>;
     synchronize(administration: Administration, entityType: EntityType, filter?: Filter): Promise<import("../types").Response<{
         id: string;
         version: number;
@@ -44,4 +46,6 @@ export declare class RESTManager {
     addLedgerAccount(administration: Administration, options: AddLedgerAccountOptions): Promise<import("../types").Response<APILedgerAccount>>;
     updateLedgerAccount(ledgerAccount: LedgerAccount, options: UpdateLedgerAccountOptions): Promise<import("../types").Response<APILedgerAccount>>;
     deleteLedgerAccount(administration: Administration, ledgerAccountId: string): Promise<import("../types").Response<void>>;
+    getSalesInvoiceByInvoiceId(administration: Administration, salesInvoiceId: string): Promise<import("../types").Response<APISalesInvoice>>;
+    getSalesInvoiceByReference(administration: Administration, salesInvoiceReference: string): Promise<import("../types").Response<APISalesInvoice>>;
 }

@@ -1,13 +1,14 @@
 import {Entity, EntityType, Filter, UrlOptions} from "../types";
 import {
     Contact,
+    ExternalSalesInvoice,
     FinancialMutation,
     GeneralDocument,
     JournalDocument,
     PurchaseInvoice,
     Receipt,
-    TypelessDocument,
-    ExternalSalesInvoice
+    SalesInvoice,
+    TypelessDocument
 } from "../struct";
 
 /** Contains various general-purpose utility methods. */
@@ -43,6 +44,8 @@ export class Util extends null {
                 return 'purchaseInvoice';
             case Receipt:
                 return 'receipt';
+            case SalesInvoice:
+                return 'salesInvoice';
             case TypelessDocument:
                 return 'typelessDocument';
             default:
@@ -67,6 +70,8 @@ export class Util extends null {
                 return 'documents/purchase_invoices';
             case 'receipt':
                 return 'documents/receipts';
+            case 'salesInvoice':
+                return 'sales_invoices'
             case 'typelessDocument':
                 return 'documents/typeless_documents';
             default:
@@ -89,6 +94,8 @@ export class Util extends null {
                 return {purchase_invoice: options};
             case "receipt":
                 return {receipt: options};
+            case "salesInvoice":
+                return {sales_invoice: options};
             case "typelessDocument":
                 return {typeless_document: options};
             default:

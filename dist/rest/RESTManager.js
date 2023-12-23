@@ -32,6 +32,13 @@ class RESTManager {
             body: "{}"
         });
     }
+    downloadAttachment(doc, attachmentId) {
+        const docPath = Util_1.Util.entityRestUrl(Util_1.Util.entityToEntityType(doc));
+        return this.requestHandler.request(`${doc.administration_id}/${docPath}/${doc.id}/attachments/${attachmentId}/download`, {
+            method: "GET",
+            body: "{}"
+        });
+    }
     synchronize(administration, entityType, filter) {
         const entityPath = Util_1.Util.entityRestUrl(entityType);
         const query = filter === undefined ? '' : Util_1.Util.queryString({ filter: filter });
@@ -262,6 +269,18 @@ class RESTManager {
     deleteLedgerAccount(administration, ledgerAccountId) {
         return this.requestHandler.request(`${administration.id}/ledger_accounts/${ledgerAccountId}`, {
             method: "DELETE",
+            body: "{}"
+        });
+    }
+    getSalesInvoiceByInvoiceId(administration, salesInvoiceId) {
+        return this.requestHandler.request(`${administration.id}/sales_invoices/find_by_invoice_id/${salesInvoiceId}`, {
+            method: "GET",
+            body: "{}"
+        });
+    }
+    getSalesInvoiceByReference(administration, salesInvoiceReference) {
+        return this.requestHandler.request(`${administration.id}/sales_invoices/find_by_reference/${salesInvoiceReference}`, {
+            method: "GET",
             body: "{}"
         });
     }

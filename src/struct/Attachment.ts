@@ -1,5 +1,7 @@
 import {APIAttachment, Document} from "../types";
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class Attachment {
     id: string;
     administration_id: string;
@@ -11,6 +13,7 @@ export class Attachment {
     rotation: number;
     created_at: Date;
     updated_at: Date;
+    private data: Buffer | null = null;
 
     constructor(public entity: Document, data: APIAttachment) {
         this.id = data.id;
@@ -30,8 +33,9 @@ export class Attachment {
         await this.entity.administration.client.rest.deleteAttachment(this.entity, this.id)
     }
 
-    /*todo: * Downloads this attachment */
-    /*async download() {
-        await this.entity.administration.client.rest.deleteAttachment(this.entity, this.id)
-    }*/
+    /** Downloads this attachment */
+    async download() {
+        if (this.data == null) this.data = (await this.entity.administration.client.rest.downloadAttachment(this.entity, this.id)).data
+        return this.data
+    }
 }

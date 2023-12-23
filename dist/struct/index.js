@@ -30,5 +30,6 @@ __exportStar(require("./JournalDocument"), exports);
 __exportStar(require("./Note"), exports);
 __exportStar(require("./PurchaseInvoice"), exports);
 __exportStar(require("./Receipt"), exports);
+__exportStar(require("./SalesInvoice"), exports);
 __exportStar(require("./TaxRate"), exports);
 __exportStar(require("./TypelessDocument"), exports);

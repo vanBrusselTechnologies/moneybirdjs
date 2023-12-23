@@ -34,6 +34,8 @@ class Util extends null {
                 return 'purchaseInvoice';
             case struct_1.Receipt:
                 return 'receipt';
+            case struct_1.SalesInvoice:
+                return 'salesInvoice';
             case struct_1.TypelessDocument:
                 return 'typelessDocument';
             default:
@@ -57,6 +59,8 @@ class Util extends null {
                 return 'documents/purchase_invoices';
             case 'receipt':
                 return 'documents/receipts';
+            case 'salesInvoice':
+                return 'sales_invoices';
             case 'typelessDocument':
                 return 'documents/typeless_documents';
             default:
@@ -78,6 +82,8 @@ class Util extends null {
                 return { purchase_invoice: options };
             case "receipt":
                 return { receipt: options };
+            case "salesInvoice":
+                return { sales_invoice: options };
             case "typelessDocument":
                 return { typeless_document: options };
             default:

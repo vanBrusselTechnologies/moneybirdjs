@@ -648,11 +648,11 @@ export interface APISalesInvoice {
     "original_estimate_id": string | null;
     "url": string;
     "payment_url": string;
-    "custom_fields": APIInvoiceCustomField;
+    "custom_fields": APIInvoiceCustomField[];
     "notes": APINote[];
     "attachments": APIAttachment[];
     "events": APIEvent[];
-    tax_totals: APITaxTotals[];
+    "tax_totals": APITaxTotals[];
 }
 export interface APIInvoiceCustomField {
     "id": string;
