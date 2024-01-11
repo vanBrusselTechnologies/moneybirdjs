@@ -63,7 +63,18 @@ class RequestHandler {
                 method: options.method, headers: headers,
                 body: options.method !== 'GET' ? options.body : undefined
             });
-            if (res.status === 504 && retries < this.rateLimit) {
+            if (res.status >= 500 && retries < this.rateLimit) {
+                return this.exec(path, options, ++retries);
+            }
+            if (res.status === 429) {
+                const retryAfter = parseInt(res.headers.get('Retry-After'));
+                const rateLimitRemaining = parseInt(res.headers.get('RateLimit-Remaining'));
+                //const rateLimitLimit = parseInt(res.headers.get('RateLimit-Limit')!)
+                const rateLimitReset = parseInt(res.headers.get('RateLimit-Reset'));
+                const timeoutMS = (1 + (rateLimitRemaining < 10 ? rateLimitReset : retryAfter)) * 1000 - Date.now();
+                await new Promise((resolve) => {
+                    setTimeout(resolve, timeoutMS);
+                });
                 return this.exec(path, options, ++retries);
             }
             if (res.status === 204)
@@ -99,7 +110,7 @@ class RequestHandler {
             }
             const isOk = res.status === 200 || res.status === 201;
             if (!isOk)
-                throw new Error(`non valid: ${res.status} ${JSON.stringify(data)}`);
+                throw new Error(`non valid: ${res.status} ${JSON.stringify(res)}`);
             return { data: data, status: res.status, maxAge: 0, path, ok: isOk };
             //https://developer.moneybird.com/#responses
         }

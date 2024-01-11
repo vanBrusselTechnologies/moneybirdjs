@@ -31,7 +31,19 @@ export class RequestHandler {
                 body: options.method !== 'GET' ? options.body : undefined
             })
 
-            if (res.status === 504 && retries < this.rateLimit) {
+            if (res.status >= 500 && retries < this.rateLimit) {
+                return this.exec<T>(path, options, ++retries)
+            }
+
+            if (res.status === 429) {
+                const retryAfter = parseInt(res.headers.get('Retry-After')!)
+                const rateLimitRemaining = parseInt(res.headers.get('RateLimit-Remaining')!)
+                //const rateLimitLimit = parseInt(res.headers.get('RateLimit-Limit')!)
+                const rateLimitReset = parseInt(res.headers.get('RateLimit-Reset')!)
+                const timeoutMS = (1 + (rateLimitRemaining < 10 ? rateLimitReset : retryAfter)) * 1000 - Date.now()
+                await new Promise((resolve) => {
+                    setTimeout(resolve, timeoutMS)
+                })
                 return this.exec<T>(path, options, ++retries)
             }
 
@@ -56,12 +68,11 @@ export class RequestHandler {
                 }
                 const buffer = Buffer.concat(chunks);
 
-                try{
+                try {
                     data = JSON.parse(buffer.toString())
-                }
-                catch (e) {
+                } catch (e) {
                     const contentDisposition = res.headers?.get('content-disposition')
-                    if(contentDisposition?.startsWith('attachment')){
+                    if (contentDisposition?.startsWith('attachment')) {
                         data = buffer
                     }
                 }
@@ -69,7 +80,7 @@ export class RequestHandler {
 
             const isOk = res.status === 200 || res.status === 201
 
-            if (!isOk) throw new Error(`non valid: ${res.status} ${JSON.stringify(data)}`)
+            if (!isOk) throw new Error(`non valid: ${res.status} ${JSON.stringify(res)}`)
 
             return {data: data as T, status: res.status, maxAge: 0, path, ok: isOk}
             //https://developer.moneybird.com/#responses
