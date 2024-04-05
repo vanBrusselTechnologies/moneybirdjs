@@ -12,7 +12,7 @@ export class Payment {
     price: number;
     price_base: number;
     payment_date: Date;
-    credit_invoice_id: string;
+    credit_invoice_id: string | null;
     financial_mutation_id: string;
     ledger_account_id: string;
     linked_payment_id: null;
@@ -32,7 +32,7 @@ export class Payment {
         this.price = parseFloat(data.price);
         this.price_base = parseFloat(data.price_base);
         this.payment_date = new Date(data.payment_date);
-        this.credit_invoice_id = data.invoice_id;
+        this.credit_invoice_id = data.credit_invoice_id;
         this.financial_mutation_id = data.financial_mutation_id;
         this.ledger_account_id = data.ledger_account_id;
         this.linked_payment_id = data.linked_payment_id;

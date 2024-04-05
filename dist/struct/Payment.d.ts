@@ -12,7 +12,7 @@ export declare class Payment {
     price: number;
     price_base: number;
     payment_date: Date;
-    credit_invoice_id: string;
+    credit_invoice_id: string | null;
     financial_mutation_id: string;
     ledger_account_id: string;
     linked_payment_id: null;

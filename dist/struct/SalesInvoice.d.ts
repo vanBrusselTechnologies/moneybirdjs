@@ -73,7 +73,7 @@ export declare class SalesInvoice {
      *
      * When scheduling sending, set the boolean sending_scheduled to true and provide an invoice_date.
      */
-    send(options: SendSalesInvoiceOptions): Promise<this>;
+    send(options?: SendSalesInvoiceOptions): Promise<this>;
     registerPaymentCreditInvoice(): Promise<this>;
     /** */
     duplicateToCreditInvoice(): Promise<SalesInvoice>;

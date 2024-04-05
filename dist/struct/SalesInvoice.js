@@ -151,7 +151,7 @@ class SalesInvoice {
      *
      * When scheduling sending, set the boolean sending_scheduled to true and provide an invoice_date.
      */
-    async send(options) {
+    async send(options = {}) {
         const { data } = await this.administration.client.rest.sendInvoice(this, options);
         this.setData(data);
         return this;
