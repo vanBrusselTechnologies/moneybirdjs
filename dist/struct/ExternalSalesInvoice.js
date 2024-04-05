@@ -5,6 +5,7 @@ const Note_1 = require("./Note");
 const Event_1 = require("./Event");
 const Attachment_1 = require("./Attachment");
 const DocumentDetail_1 = require("./DocumentDetail");
+const Payment_1 = require("./Payment");
 // noinspection JSUnusedGlobalSymbols
 class ExternalSalesInvoice {
     //public tax_totals: TaxTotals[];
@@ -37,6 +38,7 @@ class ExternalSalesInvoice {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.details = data.details.map(d => new DocumentDetail_1.DocumentDetail(this, d));
+        this.payments = data.payments.map(p => new Payment_1.Payment(this, p));
         this.notes = data.notes.map(n => new Note_1.Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment_1.Attachment(this, a));
         this.events = data.events.map(e => new Event_1.Event(this, e));
@@ -94,6 +96,7 @@ class ExternalSalesInvoice {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.details = data.details.map(d => new DocumentDetail_1.DocumentDetail(this, d));
+        this.payments = data.payments.map(p => new Payment_1.Payment(this, p));
         this.notes = data.notes.map(n => new Note_1.Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment_1.Attachment(this, a));
         this.events = data.events.map(e => new Event_1.Event(this, e));

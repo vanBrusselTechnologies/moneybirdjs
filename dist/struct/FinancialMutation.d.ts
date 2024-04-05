@@ -1,5 +1,6 @@
 import { APIFinancialMutation, APIFinancialMutationSepaFields, FinancialMutationLinkBookingOptions, FinancialMutationUnlinkBookingOptions } from "../types";
 import { Administration } from "./Administration";
+import { Payment } from "./Payment";
 /** */
 export declare class FinancialMutation {
     administration: Administration;
@@ -24,6 +25,7 @@ export declare class FinancialMutation {
     financial_statement_id: string;
     processed_at: Date | null;
     account_servicer_transaction_id: string | null;
+    payments: Payment[];
     constructor(administration: Administration, data: APIFinancialMutation);
     /** Linking a booking to a financial mutations allows you to process financial mutations. Financial mutations can be linked to invoices, documents, ledger accounts and payment batches. */
     linkBooking(options: FinancialMutationLinkBookingOptions): Promise<void>;

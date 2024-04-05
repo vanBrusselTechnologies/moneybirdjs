@@ -4,6 +4,7 @@ import {Note} from "./Note";
 import {Event} from "./Event";
 import {Attachment} from "./Attachment";
 import {DocumentDetail} from "./DocumentDetail";
+import {Payment} from "./Payment";
 
 export class PurchaseInvoice {
     public id: string;
@@ -29,7 +30,7 @@ export class PurchaseInvoice {
     public updated_at: Date;
     public version: number;
     public details: DocumentDetail[]
-    //todo: public payments: Payment[]
+    public payments: Payment[]
     public notes: Note[];
     public attachments: Attachment[];
     public events: Event[];
@@ -58,6 +59,7 @@ export class PurchaseInvoice {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.details = data.details.map(d => new DocumentDetail(this, d));
+        this.payments = data.payments.map(p => new Payment(this, p))
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));
@@ -118,6 +120,7 @@ export class PurchaseInvoice {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.details = data.details.map(d => new DocumentDetail(this, d));
+        this.payments = data.payments.map(p => new Payment(this, p))
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));

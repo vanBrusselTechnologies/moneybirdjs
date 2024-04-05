@@ -1,8 +1,8 @@
 /// <reference types="node" />
 import { RequestHandler } from "./RequestHandler";
-import { AddAttachmentOptions, AddContactOptions, AddLedgerAccountOptions, AddNoteOptions, APIAdministration, APIContact, APIContactPerson, APICustomField, APIDocument, APIDocumentStyle, APIFinancialMutation, APILedgerAccount, APINote, APISalesInvoice, APITaxRate, ContactPersonOptions, ContactSearchOptions, Document, DocumentAddOptions, DocumentEntityType, DocumentSearchOptions, DocumentUpdateOptions, EntityType, Filter, FinancialMutationLinkBookingOptions, FinancialMutationUnlinkBookingOptions, TaxRateSearchOptions, UpdateContactOptions, UpdateLedgerAccountOptions } from "../types";
-import { Administration, Contact, ContactPerson, FinancialMutation } from "../struct";
-import { LedgerAccount } from "../struct/LedgerAccount";
+import { AddAttachmentOptions, AddContactOptions, AddLedgerAccountOptions, AddNoteOptions, APIAdministration, APIContact, APIContactPerson, APICustomField, APIDocument, APIDocumentStyle, APIFinancialMutation, APILedgerAccount, APINote, APISalesInvoice, APITaxRate, ContactPersonOptions, ContactSearchOptions, Document, DocumentAddOptions, DocumentEntityType, DocumentSearchOptions, DocumentUpdateOptions, EntityType, Filter, FinancialMutationLinkBookingOptions, FinancialMutationUnlinkBookingOptions, SendSalesInvoiceOptions, TaxRateSearchOptions, UpdateContactOptions, UpdateLedgerAccountOptions } from "../types";
+import { Administration, Contact, ContactPerson, FinancialMutation, SalesInvoice } from "../struct";
+import { LedgerAccount } from "../struct";
 export declare class RESTManager {
     requestHandler: RequestHandler;
     constructor(apiToken: string);
@@ -48,4 +48,7 @@ export declare class RESTManager {
     deleteLedgerAccount(administration: Administration, ledgerAccountId: string): Promise<import("../types").Response<void>>;
     getSalesInvoiceByInvoiceId(administration: Administration, salesInvoiceId: string): Promise<import("../types").Response<APISalesInvoice>>;
     getSalesInvoiceByReference(administration: Administration, salesInvoiceReference: string): Promise<import("../types").Response<APISalesInvoice>>;
+    sendInvoice(invoice: SalesInvoice, options: SendSalesInvoiceOptions): Promise<import("../types").Response<APISalesInvoice>>;
+    registerPaymentCreditInvoice(invoice: SalesInvoice): Promise<import("../types").Response<APISalesInvoice>>;
+    duplicateToCreditInvoice(invoice: SalesInvoice): Promise<import("../types").Response<APISalesInvoice>>;
 }

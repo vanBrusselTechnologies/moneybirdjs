@@ -1,9 +1,5 @@
 import { AddNoteOptions, APIContact, ContactPersonOptions, UpdateContactOptions } from "../types";
-import { Administration } from "./index";
-import { Note } from "./Note";
-import { ContactPerson } from "./ContactPerson";
-import { CustomField } from "./CustomField";
-import { Event } from "./Event";
+import { Administration, Note, ContactPerson, CustomField, Event } from "../struct";
 /** */
 export declare class Contact {
     administration: Administration;

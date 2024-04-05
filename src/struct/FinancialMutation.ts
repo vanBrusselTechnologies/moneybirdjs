@@ -4,32 +4,33 @@ import {
     FinancialMutationUnlinkBookingOptions
 } from "../types";
 import {Administration} from "./Administration";
+import {Payment} from "./Payment";
 
 // noinspection JSUnusedGlobalSymbols
 /** */
 export class FinancialMutation {
-    id: string;
-    administration_id: string;
-    amount: number;
-    code: string | null;
-    date: Date;
-    message: string;
-    contra_account_name: string | null;
-    contra_account_number: string;
-    state: "unprocessed" | "processed";
-    amount_open: number;
-    sepa_fields: APIFinancialMutationSepaFields | null;
-    batch_reference: string | null;
-    financial_account_id: string;
-    currency: string;
-    original_amount: null;
-    created_at: Date;
-    updated_at: Date;
-    version: number;
-    financial_statement_id: string;
-    processed_at: Date | null;
-    account_servicer_transaction_id: string | null;
-    //todo payments: Payment[];
+    public id: string;
+    public administration_id: string;
+    public amount: number;
+    public code: string | null;
+    public date: Date;
+    public message: string;
+    public contra_account_name: string | null;
+    public contra_account_number: string;
+    public state: "unprocessed" | "processed";
+    public amount_open: number;
+    public sepa_fields: APIFinancialMutationSepaFields | null;
+    public batch_reference: string | null;
+    public financial_account_id: string;
+    public currency: string;
+    public original_amount: null;
+    public created_at: Date;
+    public updated_at: Date;
+    public version: number;
+    public financial_statement_id: string;
+    public processed_at: Date | null;
+    public account_servicer_transaction_id: string | null;
+    public payments: Payment[];
     //ledger_account_bookings: FinancialMutationLedgerAccountBooking[]
 
     constructor(public administration: Administration, data: APIFinancialMutation) {
@@ -54,7 +55,7 @@ export class FinancialMutation {
         this.financial_statement_id = data.financial_statement_id;
         this.processed_at = data.processed_at ? new Date(data.processed_at) : null;
         this.account_servicer_transaction_id = data.account_servicer_transaction_id;
-        //this.payments = data.payments.map(p => new Payment(this, p));
+        this.payments = data.payments.map(p => new Payment(this, p));
         //this.ledger_account_bookings = data.ledger_account_bookings.(l => new LedgerAccountBooking(this, l));
     }
 

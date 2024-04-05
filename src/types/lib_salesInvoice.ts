@@ -45,9 +45,20 @@ export interface AddSalesInvoiceDetailsAttribute {
     project_id?: string,
     /** Should be a valid product id. */
     product_id?: string,
-    time_entry_ids: number[],
+    time_entry_ids?: number[],
     row_order?: number,
     automated_tax_enabled?: boolean
+}
+
+
+export interface SendSalesInvoiceOptions {
+    delivery_method?: "Email"|"Simplerinvoicing"|"Manual",
+    sending_scheduled?: boolean,
+    deliver_ubl?: boolean,
+    mergeable?: boolean,
+    email_address?: string,
+    email_message?: string,
+    invoice_date?: string
 }
 
 export interface UpdateSalesInvoiceOptions {
@@ -65,7 +76,7 @@ export interface UpdateSalesInvoiceOptions {
     invoice_sequence_id?: string,
     remove_invoice_sequence_id?: boolean,
     invoice_date?: Date,
-    first_due_interval: number,
+    first_due_interval?: number,
     /** ISO three-character currency code, e.g., EUR or USD. */
     currency?: string,
     prices_are_incl_tax?: boolean,
@@ -91,7 +102,7 @@ export interface UpdateSalesInvoiceDetailsAttribute {
     project_id?: string,
     /** Should be a valid product id. */
     product_id?: string,
-    time_entry_ids: number[],
+    time_entry_ids?: number[],
     row_order?: number,
     _destroy?: boolean,
     automated_tax_enabled?: boolean

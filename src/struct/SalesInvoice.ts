@@ -1,10 +1,17 @@
-import {AddAttachmentOptions, AddNoteOptions, APISalesInvoice, UpdateSalesInvoiceOptions} from "../types";
+import {
+    AddAttachmentOptions,
+    AddNoteOptions,
+    APISalesInvoice,
+    SendSalesInvoiceOptions,
+    UpdateSalesInvoiceOptions
+} from "../types";
 import {Administration} from "./Administration";
 import {Note} from "./Note";
 import {Event} from "./Event";
 import {Attachment} from "./Attachment";
 import {DocumentDetail} from "./DocumentDetail";
 import {InvoiceCustomField} from "./InvoiceCustomField";
+import {Payment} from "./Payment";
 
 // noinspection JSUnusedGlobalSymbols
 /** */
@@ -41,7 +48,7 @@ export class SalesInvoice {
     public public_view_code_expires_at: Date;
     public version: number;
     public details: DocumentDetail[];
-    //public payments: Payment[];
+    public payments: Payment[];
     public total_paid: number;
     public total_unpaid: number;
     public total_unpaid_base: number;
@@ -113,6 +120,7 @@ export class SalesInvoice {
         this.url = data.url;
         this.payment_url = data.payment_url;
         this.custom_fields = data.custom_fields.map(n => new InvoiceCustomField(this, n))
+        this.payments = data.payments.map(p => new Payment(this, p));
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));
@@ -196,7 +204,8 @@ export class SalesInvoice {
         this.original_estimate_id = data.original_estimate_id;
         this.url = data.url;
         this.payment_url = data.payment_url;
-        //public custom_fields: InvoiceCustomField;
+        this.custom_fields = data.custom_fields.map(n => new InvoiceCustomField(this, n))
+        this.payments = data.payments.map(p => new Payment(this, p));
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));
@@ -205,12 +214,32 @@ export class SalesInvoice {
     /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_pdf */
     /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_ubl */
     /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_packing_slip_pdf */
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#patch_sales_invoices_id_send_invoice */
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#patch_sales_invoices_id_register_payment_creditinvoice */
+
+    /**
+     * This endpoint provides two options: sending the invoice and scheduling sending in the future. When sending now, you can provide a send method, email address and message. If you don’t provide any arguments, the defaults from the contact and workflow will be used.
+     *
+     * When scheduling sending, set the boolean sending_scheduled to true and provide an invoice_date.
+     */
+    async send(options: SendSalesInvoiceOptions) {
+        const {data} = await this.administration.client.rest.sendInvoice(this, options);
+        this.setData(data);
+        return this;
+    }
+
+    async registerPaymentCreditInvoice() {
+        const {data} = await this.administration.client.rest.registerPaymentCreditInvoice(this);
+        this.setData(data);
+        return this;
+    }
+
     /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_pause */
     /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_resume */
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#patch_sales_invoices_id_duplicate_creditinvoice */
 
+    /** */
+    async duplicateToCreditInvoice() {
+        const {data} = await this.administration.client.rest.duplicateToCreditInvoice(this);
+        return new SalesInvoice(this.administration, data);
+    }
 
     /* todo: Payment
     async addPayment(options: AddPaymentOptions) {

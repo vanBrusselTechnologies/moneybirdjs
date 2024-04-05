@@ -1,10 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Contact = void 0;
-const Note_1 = require("./Note");
-const ContactPerson_1 = require("./ContactPerson");
-const ContactCustomField_1 = require("./ContactCustomField");
-const Event_1 = require("./Event");
+const struct_1 = require("../struct");
 // noinspection JSUnusedGlobalSymbols
 /** */
 class Contact {
@@ -60,11 +57,11 @@ class Contact {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.sales_invoices_url = data.sales_invoices_url;
-        this.notes = data.notes.map(n => new Note_1.Note(this, n));
-        this.custom_fields = data.custom_fields.map(n => new ContactCustomField_1.ContactCustomField(this, n));
-        this.contact_people = data.contact_people.map(n => new ContactPerson_1.ContactPerson(this, n));
+        this.notes = data.notes.map(n => new struct_1.Note(this, n));
+        this.custom_fields = data.custom_fields.map(n => new struct_1.ContactCustomField(this, n));
+        this.contact_people = data.contact_people.map(n => new struct_1.ContactPerson(this, n));
         this.archived = data.archived;
-        this.events = data.events ? data.events.map(n => new Event_1.Event(this, n)) : [];
+        this.events = data.events ? data.events.map(n => new struct_1.Event(this, n)) : [];
     }
     setData(data) {
         if (data.credit_card_type)
@@ -117,11 +114,11 @@ class Contact {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.sales_invoices_url = data.sales_invoices_url;
-        this.notes = data.notes.map(n => new Note_1.Note(this, n));
-        this.custom_fields = data.custom_fields.map(n => new ContactCustomField_1.ContactCustomField(this, n));
-        this.contact_people = data.contact_people.map(n => new ContactPerson_1.ContactPerson(this, n));
+        this.notes = data.notes.map(n => new struct_1.Note(this, n));
+        this.custom_fields = data.custom_fields.map(n => new struct_1.ContactCustomField(this, n));
+        this.contact_people = data.contact_people.map(n => new struct_1.ContactPerson(this, n));
         this.archived = data.archived;
-        this.events = data.events.map(n => new Event_1.Event(this, n));
+        this.events = data.events.map(n => new struct_1.Event(this, n));
     }
     /** Updates this contact. */
     async update(options) {
@@ -137,7 +134,7 @@ class Contact {
     // todo async getAdditionalCharges
     async addNote(options) {
         const { data } = await this.administration.client.rest.addNote(this, options);
-        const note = new Note_1.Note(this, data);
+        const note = new struct_1.Note(this, data);
         this.notes.push(note);
         return note;
     }
@@ -147,11 +144,11 @@ class Contact {
     }
     async getContactPerson(contactPersonId) {
         const { data } = await this.administration.client.rest.getContactPerson(this, contactPersonId);
-        return new ContactPerson_1.ContactPerson(this, data);
+        return new struct_1.ContactPerson(this, data);
     }
     async addContactPerson(options) {
         const { data } = await this.administration.client.rest.addContactPerson(this, options);
-        const contactPerson = new ContactPerson_1.ContactPerson(this, data);
+        const contactPerson = new struct_1.ContactPerson(this, data);
         this.contact_people.push(contactPerson);
         return contactPerson;
     }

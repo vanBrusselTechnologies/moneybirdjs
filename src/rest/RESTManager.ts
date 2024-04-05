@@ -25,15 +25,15 @@ import {
     EntityType,
     Filter,
     FinancialMutationLinkBookingOptions,
-    FinancialMutationUnlinkBookingOptions,
+    FinancialMutationUnlinkBookingOptions, SendSalesInvoiceOptions,
     TaxRateSearchOptions,
     UpdateContactOptions,
     UpdateLedgerAccountOptions
 } from "../types";
 import {Util} from "../util/Util";
-import {Administration, Contact, ContactPerson, FinancialMutation} from "../struct";
+import {Administration, Contact, ContactPerson, FinancialMutation, SalesInvoice} from "../struct";
 import FormData from 'form-data';
-import {LedgerAccount} from "../struct/LedgerAccount";
+import {LedgerAccount} from "../struct";
 
 export class RESTManager {
     requestHandler: RequestHandler
@@ -356,6 +356,27 @@ export class RESTManager {
     public getSalesInvoiceByReference(administration: Administration, salesInvoiceReference: string) {
         return this.requestHandler.request<APISalesInvoice>(`${administration.id}/sales_invoices/find_by_reference/${salesInvoiceReference}`, {
             method: "GET",
+            body: "{}"
+        })
+    }
+
+    public sendInvoice(invoice: SalesInvoice, options: SendSalesInvoiceOptions){
+        return this.requestHandler.request<APISalesInvoice>(`${invoice.administration_id}/sales_invoices/${invoice.id}/send_invoice`, {
+            method: "PATCH",
+            body: JSON.stringify({sales_invoice_sending: options})
+        })
+    }
+
+    public registerPaymentCreditInvoice(invoice: SalesInvoice){
+        return this.requestHandler.request<APISalesInvoice>(`${invoice.administration_id}/sales_invoices/${invoice.id}/register_payment_creditinvoice`, {
+            method: "PATCH",
+            body: "{}"
+        })
+    }
+
+    public duplicateToCreditInvoice(invoice: SalesInvoice){
+        return this.requestHandler.request<APISalesInvoice>(`${invoice.administration_id}/sales_invoices/${invoice.id}/duplicate_creditinvoice`, {
+            method: "PATCH",
             body: "{}"
         })
     }

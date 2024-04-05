@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FinancialMutation = void 0;
+const Payment_1 = require("./Payment");
 // noinspection JSUnusedGlobalSymbols
 /** */
 class FinancialMutation {
-    //todo payments: Payment[];
     //ledger_account_bookings: FinancialMutationLedgerAccountBooking[]
     constructor(administration, data) {
         this.administration = administration;
@@ -29,7 +29,7 @@ class FinancialMutation {
         this.financial_statement_id = data.financial_statement_id;
         this.processed_at = data.processed_at ? new Date(data.processed_at) : null;
         this.account_servicer_transaction_id = data.account_servicer_transaction_id;
-        //this.payments = data.payments.map(p => new Payment(this, p));
+        this.payments = data.payments.map(p => new Payment_1.Payment(this, p));
         //this.ledger_account_bookings = data.ledger_account_bookings.(l => new LedgerAccountBooking(this, l));
     }
     /** Linking a booking to a financial mutations allows you to process financial mutations. Financial mutations can be linked to invoices, documents, ledger accounts and payment batches. */

@@ -1,5 +1,5 @@
 import {APIDocumentField, APIDocumentStyle} from "../types";
-import {Administration} from "./Administration";
+import {Administration} from "../struct";
 
 export class DocumentStyle {
     id: string;

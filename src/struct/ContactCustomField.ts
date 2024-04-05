@@ -1,6 +1,5 @@
 import {APIContactCustomField, CustomFieldSource} from "../types";
-import {CustomField} from "./CustomField";
-import {Contact} from "./Contact";
+import {CustomField, Contact} from "../struct";
 
 export class ContactCustomField extends CustomField {
     public value: string;

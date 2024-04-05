@@ -1,5 +1,5 @@
 import { APIContactPerson, ContactPersonOptions } from "../types";
-import { Contact } from "./Contact";
+import { Contact } from "../struct";
 export declare class ContactPerson {
     contact: Contact;
     id: string;

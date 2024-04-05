@@ -284,5 +284,23 @@ class RESTManager {
             body: "{}"
         });
     }
+    sendInvoice(invoice, options) {
+        return this.requestHandler.request(`${invoice.administration_id}/sales_invoices/${invoice.id}/send_invoice`, {
+            method: "PATCH",
+            body: JSON.stringify({ sales_invoice_sending: options })
+        });
+    }
+    registerPaymentCreditInvoice(invoice) {
+        return this.requestHandler.request(`${invoice.administration_id}/sales_invoices/${invoice.id}/register_payment_creditinvoice`, {
+            method: "PATCH",
+            body: "{}"
+        });
+    }
+    duplicateToCreditInvoice(invoice) {
+        return this.requestHandler.request(`${invoice.administration_id}/sales_invoices/${invoice.id}/duplicate_creditinvoice`, {
+            method: "PATCH",
+            body: "{}"
+        });
+    }
 }
 exports.RESTManager = RESTManager;

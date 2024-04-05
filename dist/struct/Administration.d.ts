@@ -1,18 +1,6 @@
 import { AddContactOptions, AddExternalSalesInvoiceOptions, AddGeneralDocumentOptions, AddJournalDocumentOptions, AddLedgerAccountOptions, AddPurchaseInvoiceOptions, AddReceiptOptions, AddSalesInvoiceOptions, AddTypelessDocumentOptions, APIAdministration, ContactSearchOptions, EntityType, ExternalSalesInvoiceSearchOptions, Filter, GeneralDocumentSearchOptions, JournalDocumentSearchOptions, PurchaseInvoiceSearchOptions, ReceiptSearchOptions, SalesInvoiceSearchOptions, TaxRateSearchOptions, TypelessDocumentSearchOptions } from "../types";
 import { Client } from "../client/Client";
-import { Contact } from "./Contact";
-import { CustomField } from "./CustomField";
-import { DocumentStyle } from "./DocumentStyle";
-import { ExternalSalesInvoice } from "./ExternalSalesInvoice";
-import { GeneralDocument } from "./GeneralDocument";
-import { JournalDocument } from "./JournalDocument";
-import { PurchaseInvoice } from "./PurchaseInvoice";
-import { Receipt } from "./Receipt";
-import { SalesInvoice } from "./SalesInvoice";
-import { TaxRate } from "./TaxRate";
-import { TypelessDocument } from "./TypelessDocument";
-import { FinancialMutation } from "./FinancialMutation";
-import { LedgerAccount } from "./LedgerAccount";
+import { Contact, CustomField, DocumentStyle, ExternalSalesInvoice, GeneralDocument, JournalDocument, PurchaseInvoice, Receipt, SalesInvoice, TaxRate, TypelessDocument, FinancialMutation, LedgerAccount } from "../struct";
 /** */
 export declare class Administration {
     client: Client;

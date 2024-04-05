@@ -6,6 +6,7 @@ const Event_1 = require("./Event");
 const Attachment_1 = require("./Attachment");
 const DocumentDetail_1 = require("./DocumentDetail");
 const InvoiceCustomField_1 = require("./InvoiceCustomField");
+const Payment_1 = require("./Payment");
 // noinspection JSUnusedGlobalSymbols
 /** */
 class SalesInvoice {
@@ -59,6 +60,7 @@ class SalesInvoice {
         this.url = data.url;
         this.payment_url = data.payment_url;
         this.custom_fields = data.custom_fields.map(n => new InvoiceCustomField_1.InvoiceCustomField(this, n));
+        this.payments = data.payments.map(p => new Payment_1.Payment(this, p));
         this.notes = data.notes.map(n => new Note_1.Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment_1.Attachment(this, a));
         this.events = data.events.map(e => new Event_1.Event(this, e));
@@ -135,10 +137,36 @@ class SalesInvoice {
         this.original_estimate_id = data.original_estimate_id;
         this.url = data.url;
         this.payment_url = data.payment_url;
-        //public custom_fields: InvoiceCustomField;
+        this.custom_fields = data.custom_fields.map(n => new InvoiceCustomField_1.InvoiceCustomField(this, n));
+        this.payments = data.payments.map(p => new Payment_1.Payment(this, p));
         this.notes = data.notes.map(n => new Note_1.Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment_1.Attachment(this, a));
         this.events = data.events.map(e => new Event_1.Event(this, e));
+    }
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_pdf */
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_ubl */
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_packing_slip_pdf */
+    /**
+     * This endpoint provides two options: sending the invoice and scheduling sending in the future. When sending now, you can provide a send method, email address and message. If you don’t provide any arguments, the defaults from the contact and workflow will be used.
+     *
+     * When scheduling sending, set the boolean sending_scheduled to true and provide an invoice_date.
+     */
+    async send(options) {
+        const { data } = await this.administration.client.rest.sendInvoice(this, options);
+        this.setData(data);
+        return this;
+    }
+    async registerPaymentCreditInvoice() {
+        const { data } = await this.administration.client.rest.registerPaymentCreditInvoice(this);
+        this.setData(data);
+        return this;
+    }
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_pause */
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_resume */
+    /** */
+    async duplicateToCreditInvoice() {
+        const { data } = await this.administration.client.rest.duplicateToCreditInvoice(this);
+        return new SalesInvoice(this.administration, data);
     }
 }
 exports.SalesInvoice = SalesInvoice;

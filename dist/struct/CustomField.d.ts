@@ -1,5 +1,5 @@
 import { APICustomField, CustomFieldSource } from "../types";
-import { Administration } from "./Administration";
+import { Administration } from "../struct";
 export declare class CustomField {
     administration: Administration;
     id: string;

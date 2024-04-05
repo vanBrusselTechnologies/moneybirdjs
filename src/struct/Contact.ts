@@ -1,10 +1,5 @@
 import {AddNoteOptions, APIContact, ContactPersonOptions, UpdateContactOptions} from "../types";
-import {Administration} from "./index";
-import {Note} from "./Note";
-import {ContactPerson} from "./ContactPerson";
-import {CustomField} from "./CustomField";
-import {ContactCustomField} from "./ContactCustomField";
-import {Event} from "./Event";
+import {Administration,Note, ContactPerson, CustomField, ContactCustomField, Event} from "../struct";
 
 // noinspection JSUnusedGlobalSymbols
 /** */

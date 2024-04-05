@@ -4,6 +4,7 @@ import { Note } from "./Note";
 import { Event } from "./Event";
 import { Attachment } from "./Attachment";
 import { DocumentDetail } from "./DocumentDetail";
+import { Payment } from "./Payment";
 export declare class ExternalSalesInvoice {
     administration: Administration;
     id: string;
@@ -23,6 +24,7 @@ export declare class ExternalSalesInvoice {
     updated_at: Date;
     version: number;
     details: DocumentDetail[];
+    payments: Payment[];
     total_paid: number;
     total_unpaid: number;
     total_unpaid_base: number;

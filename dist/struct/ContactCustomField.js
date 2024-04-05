@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContactCustomField = void 0;
 const types_1 = require("../types");
-const CustomField_1 = require("./CustomField");
-class ContactCustomField extends CustomField_1.CustomField {
+const struct_1 = require("../struct");
+class ContactCustomField extends struct_1.CustomField {
     constructor(contact, data) {
         const customFieldData = {
             id: data.id,

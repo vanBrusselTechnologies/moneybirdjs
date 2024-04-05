@@ -9,6 +9,7 @@ import {Note} from "./Note";
 import {Event} from "./Event";
 import {Attachment} from "./Attachment";
 import {DocumentDetail} from "./DocumentDetail";
+import {Payment} from "./Payment";
 
 // noinspection JSUnusedGlobalSymbols
 export class ExternalSalesInvoice {
@@ -29,7 +30,7 @@ export class ExternalSalesInvoice {
     public updated_at: Date;
     public version: number;
     public details: DocumentDetail[];
-    //public payments: Payment[];
+    public payments: Payment[];
     public total_paid: number;
     public total_unpaid: number;
     public total_unpaid_base: number;
@@ -74,6 +75,7 @@ export class ExternalSalesInvoice {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.details = data.details.map(d => new DocumentDetail(this, d));
+        this.payments = data.payments.map(p => new Payment(this, p))
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));
@@ -138,6 +140,7 @@ export class ExternalSalesInvoice {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.details = data.details.map(d => new DocumentDetail(this, d));
+        this.payments = data.payments.map(p => new Payment(this, p))
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));

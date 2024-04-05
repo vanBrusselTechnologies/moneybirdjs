@@ -1,10 +1,11 @@
-import { AddAttachmentOptions, AddNoteOptions, APISalesInvoice, UpdateSalesInvoiceOptions } from "../types";
+import { AddAttachmentOptions, AddNoteOptions, APISalesInvoice, SendSalesInvoiceOptions, UpdateSalesInvoiceOptions } from "../types";
 import { Administration } from "./Administration";
 import { Note } from "./Note";
 import { Event } from "./Event";
 import { Attachment } from "./Attachment";
 import { DocumentDetail } from "./DocumentDetail";
 import { InvoiceCustomField } from "./InvoiceCustomField";
+import { Payment } from "./Payment";
 /** */
 export declare class SalesInvoice {
     administration: Administration;
@@ -38,6 +39,7 @@ export declare class SalesInvoice {
     public_view_code_expires_at: Date;
     version: number;
     details: DocumentDetail[];
+    payments: Payment[];
     total_paid: number;
     total_unpaid: number;
     total_unpaid_base: number;
@@ -66,4 +68,13 @@ export declare class SalesInvoice {
     addAttachment(options: AddAttachmentOptions): Promise<void>;
     deleteAttachment(attachmentId: string): Promise<void>;
     private setData;
+    /**
+     * This endpoint provides two options: sending the invoice and scheduling sending in the future. When sending now, you can provide a send method, email address and message. If you don’t provide any arguments, the defaults from the contact and workflow will be used.
+     *
+     * When scheduling sending, set the boolean sending_scheduled to true and provide an invoice_date.
+     */
+    send(options: SendSalesInvoiceOptions): Promise<this>;
+    registerPaymentCreditInvoice(): Promise<this>;
+    /** */
+    duplicateToCreditInvoice(): Promise<SalesInvoice>;
 }
