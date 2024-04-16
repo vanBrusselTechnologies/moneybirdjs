@@ -325,17 +325,17 @@ export class RESTManager {
         })
     }
 
-    public addLedgerAccount(administration: Administration, options: AddLedgerAccountOptions) {
+    public addLedgerAccount(administration: Administration, options: AddLedgerAccountOptions, rgs_code: string) {
         return this.requestHandler.request<APILedgerAccount>(`${administration.id}/ledger_accounts`, {
             method: "POST",
-            body: JSON.stringify({ledger_account: options})
+            body: JSON.stringify({ledger_account: options, rgs_code: rgs_code})
         })
     }
 
-    public updateLedgerAccount(ledgerAccount: LedgerAccount, options: UpdateLedgerAccountOptions) {
+    public updateLedgerAccount(ledgerAccount: LedgerAccount, options: UpdateLedgerAccountOptions, rgs_code: string) {
         return this.requestHandler.request<APILedgerAccount>(`${ledgerAccount.administration_id}/ledger_accounts/${ledgerAccount.id}`, {
             method: "PATCH",
-            body: JSON.stringify({ledger_account: options})
+            body: JSON.stringify({ledger_account: options, rgs_code: rgs_code})
         })
     }
 
@@ -360,21 +360,21 @@ export class RESTManager {
         })
     }
 
-    public sendInvoice(invoice: SalesInvoice, options: SendSalesInvoiceOptions){
+    public sendInvoice(invoice: SalesInvoice, options: SendSalesInvoiceOptions) {
         return this.requestHandler.request<APISalesInvoice>(`${invoice.administration_id}/sales_invoices/${invoice.id}/send_invoice`, {
             method: "PATCH",
             body: JSON.stringify({sales_invoice_sending: options})
         })
     }
 
-    public registerPaymentCreditInvoice(invoice: SalesInvoice){
+    public registerPaymentCreditInvoice(invoice: SalesInvoice) {
         return this.requestHandler.request<APISalesInvoice>(`${invoice.administration_id}/sales_invoices/${invoice.id}/register_payment_creditinvoice`, {
             method: "PATCH",
             body: "{}"
         })
     }
 
-    public duplicateToCreditInvoice(invoice: SalesInvoice){
+    public duplicateToCreditInvoice(invoice: SalesInvoice) {
         return this.requestHandler.request<APISalesInvoice>(`${invoice.administration_id}/sales_invoices/${invoice.id}/duplicate_creditinvoice`, {
             method: "PATCH",
             body: "{}"

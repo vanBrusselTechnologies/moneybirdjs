@@ -27,13 +27,11 @@ class ContactPerson {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
     }
-    /** Deletes this contact, or archives it when deleting was not possible. */
     async update(options) {
         const { data } = await this.contact.administration.client.rest.updateContactPerson(this, options);
         this.setData(data);
         return this;
     }
-    /** Deletes this contact, or archives it when deleting was not possible. */
     async delete() {
         await this.contact.deleteContactPerson(this.id);
     }

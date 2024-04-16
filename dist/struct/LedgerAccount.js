@@ -27,13 +27,15 @@ class LedgerAccount {
         this.created_at = new Date(data.created_at);
         this.updated_at = new Date(data.updated_at);
     }
-    /** Deletes this contact, or archives it when deleting was not possible. */
-    async update(options) {
-        const { data } = await this.administration.client.rest.updateLedgerAccount(this, options);
+    /**
+     * @param options
+     * @param rgs_code Existing RGS version 3.5 code, e.g. ‘WMfoBelMfo’
+     */
+    async update(options, rgs_code) {
+        const { data } = await this.administration.client.rest.updateLedgerAccount(this, options, rgs_code);
         this.setData(data);
         return this;
     }
-    /** Deletes this contact, or archives it when deleting was not possible. */
     async delete() {
         await this.administration.deleteLedgerAccount(this.id);
     }

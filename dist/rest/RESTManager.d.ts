@@ -43,8 +43,8 @@ export declare class RESTManager {
     getTaxRates(administration: Administration, filter: TaxRateSearchOptions): Promise<import("../types").Response<APITaxRate[]>>;
     getLedgerAccounts(administration: Administration): Promise<import("../types").Response<APILedgerAccount[]>>;
     getLedgerAccount(administration: Administration, id: string): Promise<import("../types").Response<APILedgerAccount>>;
-    addLedgerAccount(administration: Administration, options: AddLedgerAccountOptions): Promise<import("../types").Response<APILedgerAccount>>;
-    updateLedgerAccount(ledgerAccount: LedgerAccount, options: UpdateLedgerAccountOptions): Promise<import("../types").Response<APILedgerAccount>>;
+    addLedgerAccount(administration: Administration, options: AddLedgerAccountOptions, rgs_code: string): Promise<import("../types").Response<APILedgerAccount>>;
+    updateLedgerAccount(ledgerAccount: LedgerAccount, options: UpdateLedgerAccountOptions, rgs_code: string): Promise<import("../types").Response<APILedgerAccount>>;
     deleteLedgerAccount(administration: Administration, ledgerAccountId: string): Promise<import("../types").Response<void>>;
     getSalesInvoiceByInvoiceId(administration: Administration, salesInvoiceId: string): Promise<import("../types").Response<APISalesInvoice>>;
     getSalesInvoiceByReference(administration: Administration, salesInvoiceReference: string): Promise<import("../types").Response<APISalesInvoice>>;

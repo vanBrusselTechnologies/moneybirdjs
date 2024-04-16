@@ -17,6 +17,5 @@ export declare class Note {
     created_at: Date;
     updated_at: Date;
     constructor(entity: Contact | Document, data: APINote);
-    /** Deletes this contact, or archives it when deleting was not possible. */
     delete(): Promise<void>;
 }

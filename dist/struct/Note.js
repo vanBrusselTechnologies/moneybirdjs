@@ -20,7 +20,6 @@ class Note {
         this.created_at = new Date(data.created_at);
         this.updated_at = new Date(data.updated_at);
     }
-    /** Deletes this contact, or archives it when deleting was not possible. */
     async delete() {
         await this.entity.administration.client.rest.deleteNote(this.entity, this.id);
     }

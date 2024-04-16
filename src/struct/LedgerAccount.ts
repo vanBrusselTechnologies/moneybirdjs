@@ -44,14 +44,16 @@ export class LedgerAccount {
         this.updated_at = new Date(data.updated_at);
     }
 
-    /** Deletes this contact, or archives it when deleting was not possible. */
-    async update(options: UpdateLedgerAccountOptions) {
-        const {data} = await this.administration.client.rest.updateLedgerAccount(this, options)
+    /**
+     * @param options
+     * @param rgs_code Existing RGS version 3.5 code, e.g. ‘WMfoBelMfo’
+     */
+    async update(options: UpdateLedgerAccountOptions, rgs_code: string) {
+        const {data} = await this.administration.client.rest.updateLedgerAccount(this, options, rgs_code)
         this.setData(data)
         return this;
     }
 
-    /** Deletes this contact, or archives it when deleting was not possible. */
     async delete() {
         await this.administration.deleteLedgerAccount(this.id)
     }

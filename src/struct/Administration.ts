@@ -292,8 +292,12 @@ export class Administration {
         return new LedgerAccount(this, data)
     }
 
-    async addLedgerAccount(options: AddLedgerAccountOptions) {
-        const {data} = await this.client.rest.addLedgerAccount(this, options)
+    /**
+     * @param options
+     * @param rgs_code Existing RGS version 3.5 code, e.g. ‘WMfoBelMfo’
+     */
+    async addLedgerAccount(options: AddLedgerAccountOptions, rgs_code: string) {
+        const {data} = await this.client.rest.addLedgerAccount(this, options, rgs_code)
         return new LedgerAccount(this, data)
     }
 

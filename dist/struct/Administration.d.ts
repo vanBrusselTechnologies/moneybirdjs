@@ -67,7 +67,11 @@ export declare class Administration {
     getFinancialMutation(financialMutationId: string): Promise<FinancialMutation>;
     getLedgerAccounts(): Promise<LedgerAccount[]>;
     getLedgerAccount(ledgerAccountId: string): Promise<LedgerAccount>;
-    addLedgerAccount(options: AddLedgerAccountOptions): Promise<LedgerAccount>;
+    /**
+     * @param options
+     * @param rgs_code Existing RGS version 3.5 code, e.g. ‘WMfoBelMfo’
+     */
+    addLedgerAccount(options: AddLedgerAccountOptions, rgs_code: string): Promise<LedgerAccount>;
     deleteLedgerAccount(ledgerAccountId: string): Promise<void>;
     listSalesInvoicesByIds(ids: Array<string>): Promise<SalesInvoice[]>;
     getSalesInvoices(options?: SalesInvoiceSearchOptions): Promise<SalesInvoice[]>;

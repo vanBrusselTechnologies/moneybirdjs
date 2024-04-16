@@ -13,8 +13,10 @@ export declare class LedgerAccount {
     description?: string;
     constructor(administration: Administration, data: APILedgerAccount);
     setData(data: APILedgerAccount): void;
-    /** Deletes this contact, or archives it when deleting was not possible. */
-    update(options: UpdateLedgerAccountOptions): Promise<this>;
-    /** Deletes this contact, or archives it when deleting was not possible. */
+    /**
+     * @param options
+     * @param rgs_code Existing RGS version 3.5 code, e.g. ‘WMfoBelMfo’
+     */
+    update(options: UpdateLedgerAccountOptions, rgs_code: string): Promise<this>;
     delete(): Promise<void>;
 }

@@ -14,8 +14,6 @@ export declare class ContactPerson {
     version: number;
     constructor(contact: Contact, data: APIContactPerson);
     private setData;
-    /** Deletes this contact, or archives it when deleting was not possible. */
     update(options: ContactPersonOptions): Promise<this>;
-    /** Deletes this contact, or archives it when deleting was not possible. */
     delete(): Promise<void>;
 }

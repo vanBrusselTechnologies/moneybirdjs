@@ -254,16 +254,16 @@ class RESTManager {
             body: "{}"
         });
     }
-    addLedgerAccount(administration, options) {
+    addLedgerAccount(administration, options, rgs_code) {
         return this.requestHandler.request(`${administration.id}/ledger_accounts`, {
             method: "POST",
-            body: JSON.stringify({ ledger_account: options })
+            body: JSON.stringify({ ledger_account: options, rgs_code: rgs_code })
         });
     }
-    updateLedgerAccount(ledgerAccount, options) {
+    updateLedgerAccount(ledgerAccount, options, rgs_code) {
         return this.requestHandler.request(`${ledgerAccount.administration_id}/ledger_accounts/${ledgerAccount.id}`, {
             method: "PATCH",
-            body: JSON.stringify({ ledger_account: options })
+            body: JSON.stringify({ ledger_account: options, rgs_code: rgs_code })
         });
     }
     deleteLedgerAccount(administration, ledgerAccountId) {

@@ -197,8 +197,12 @@ class Administration {
         const { data } = await this.client.rest.getLedgerAccount(this, ledgerAccountId);
         return new struct_1.LedgerAccount(this, data);
     }
-    async addLedgerAccount(options) {
-        const { data } = await this.client.rest.addLedgerAccount(this, options);
+    /**
+     * @param options
+     * @param rgs_code Existing RGS version 3.5 code, e.g. ‘WMfoBelMfo’
+     */
+    async addLedgerAccount(options, rgs_code) {
+        const { data } = await this.client.rest.addLedgerAccount(this, options, rgs_code);
         return new struct_1.LedgerAccount(this, data);
     }
     async deleteLedgerAccount(ledgerAccountId) {
