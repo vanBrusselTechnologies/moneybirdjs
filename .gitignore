@@ -2,7 +2,7 @@ node_modules/
 .vs/
 .vscode/
 .idea/
-#dist/
+dist/
 test/
 .env
 .vercel
