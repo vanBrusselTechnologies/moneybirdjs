@@ -3,7 +3,7 @@ import {
     AddAttachmentOptions,
     AddContactOptions,
     AddLedgerAccountOptions,
-    AddNoteOptions,
+    AddNoteOptions, AddPaymentOptions,
     APIAdministration,
     APIContact,
     APIContactPerson,
@@ -12,7 +12,7 @@ import {
     APIDocumentStyle,
     APIFinancialMutation,
     APILedgerAccount,
-    APINote,
+    APINote, APIPayment,
     APISalesInvoice,
     APITaxRate,
     ContactPersonOptions,
@@ -22,7 +22,7 @@ import {
     DocumentEntityType,
     DocumentSearchOptions,
     DocumentUpdateOptions,
-    EntityType,
+    EntityType, ExternalSalesInvoice,
     Filter,
     FinancialMutationLinkBookingOptions,
     FinancialMutationUnlinkBookingOptions, SendSalesInvoiceOptions,
@@ -31,7 +31,15 @@ import {
     UpdateLedgerAccountOptions
 } from "../types";
 import {Util} from "../util/Util";
-import {Administration, Contact, ContactPerson, FinancialMutation, SalesInvoice} from "../struct";
+import {
+    Administration,
+    Contact,
+    ContactPerson,
+    FinancialMutation,
+    SalesInvoice,
+    PurchaseInvoice,
+    Receipt
+} from "../struct";
 import FormData from 'form-data';
 import {LedgerAccount} from "../struct";
 
@@ -232,24 +240,23 @@ export class RESTManager {
     }
 
 //#endregion Document
-    //todo: Payments
-    /*
-    public addPayment(entity: PurchaseInvoice | Receipt, options: AddPaymentOptions) {
-        const entityPath = Util.documentRestUrl(doc)
-        return this.requestHandler.request<APIPayment>(`${entity.administration_id}/${entityPath}/${entity.id}/payments`, {
+    public addPayment(entity: ExternalSalesInvoice | PurchaseInvoice | Receipt | SalesInvoice, options: AddPaymentOptions) {
+        const docType = Util.entityToEntityType(entity);
+        const documentPath = Util.entityRestUrl(docType);
+        return this.requestHandler.request<APIPayment>(`${entity.administration_id}/${documentPath}/${entity.id}/payments`, {
             method: "POST",
             body: JSON.stringify({payment: options})
         })
     }
 
-    public deletePayment(entity: PurchaseInvoice | Receipt, paymentId: string) {
-        const entityPath = Util.documentRestUrl(doc)
-        return this.requestHandler.request<void>(`${entity.administration_id}/${entityPath}/${entity.id}/payments/${paymentId}`, {
+    public deletePayment(entity: ExternalSalesInvoice | PurchaseInvoice | Receipt | SalesInvoice, paymentId: string) {
+        const docType = Util.entityToEntityType(entity);
+        const documentPath = Util.entityRestUrl(docType);
+        return this.requestHandler.request<void>(`${entity.administration_id}/${documentPath}/${entity.id}/payments/${paymentId}`, {
             method: "DELETE",
             body: "{}"
         })
     }
-    */
 
     public addNote(entity: Contact | Document, options: AddNoteOptions) {
         const entityPath = Util.entityRestUrl(Util.entityToEntityType(entity));

@@ -281,7 +281,6 @@ export class Administration {
     //todo: Financial Statements
     //todo: Identities
 
-    //todo: Ledger Accounts
     async getLedgerAccounts() {
         const {data} = await this.client.rest.getLedgerAccounts(this)
         return data.map((entry) => new LedgerAccount(this, entry))

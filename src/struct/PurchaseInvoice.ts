@@ -1,4 +1,10 @@
-import {AddAttachmentOptions, AddNoteOptions, APIPurchaseInvoice, UpdatePurchaseInvoiceOptions} from "../types";
+import {
+    AddAttachmentOptions,
+    AddNoteOptions,
+    AddPaymentOptions,
+    APIPurchaseInvoice,
+    UpdatePurchaseInvoiceOptions
+} from "../types";
 import {Administration} from "./Administration";
 import {Note} from "./Note";
 import {Event} from "./Event";
@@ -126,8 +132,6 @@ export class PurchaseInvoice {
         this.events = data.events.map(e => new Event(this, e));
     }
 
-    //todo: Payment
-    /*
     async addPayment(options: AddPaymentOptions) {
         const {data} = await this.administration.client.rest.addPayment(this, options)
         const payment = new Payment(this, data)
@@ -139,5 +143,4 @@ export class PurchaseInvoice {
         await this.administration.client.rest.deletePayment(this, paymentId)
         this.payments = this.payments.filter(p => p.id !== paymentId)
     }
-    */
 }

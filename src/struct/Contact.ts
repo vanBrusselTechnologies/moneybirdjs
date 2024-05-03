@@ -1,5 +1,5 @@
 import {AddNoteOptions, APIContact, ContactPersonOptions, UpdateContactOptions} from "../types";
-import {Administration,Note, ContactPerson, CustomField, ContactCustomField, Event} from "../struct";
+import {Administration, Note, ContactPerson, CustomField, ContactCustomField, Event} from "../struct";
 
 // noinspection JSUnusedGlobalSymbols
 /** */
@@ -56,8 +56,6 @@ export class Contact {
 
     constructor(public administration: Administration, data: APIContact) {
         if (data.credit_card_type) console.log(`Contact.creditCardType: ${data.credit_card_type}`);
-        if (data.invoice_workflow_id) console.log(`Contact.invoiceWorkflowId: ${data.invoice_workflow_id}`);
-        if (data.estimate_workflow_id) console.log(`Contact.estimateWorkflowId: ${data.estimate_workflow_id}`);
 
         this.id = data.id;
         this.administration_id = data.administration_id;
@@ -112,8 +110,6 @@ export class Contact {
 
     private setData(data: APIContact) {
         if (data.credit_card_type) console.log(`Contact.creditCardType: ${data.credit_card_type}`);
-        if (data.invoice_workflow_id) console.log(`Contact.invoiceWorkflowId: ${data.invoice_workflow_id}`);
-        if (data.estimate_workflow_id) console.log(`Contact.estimateWorkflowId: ${data.estimate_workflow_id}`);
         this.id = data.id;
         this.administration_id = data.administration_id;
         this.company_name = data.company_name;

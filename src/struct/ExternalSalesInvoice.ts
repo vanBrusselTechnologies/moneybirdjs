@@ -1,6 +1,6 @@
 import {
     AddAttachmentOptions,
-    AddNoteOptions,
+    AddNoteOptions, AddPaymentOptions,
     APIExternalSalesInvoice,
     UpdateExternalSalesInvoiceOptions
 } from "../types";
@@ -45,7 +45,7 @@ export class ExternalSalesInvoice {
     public attachments: Attachment[];
     public events: Event[];
 
-    //public tax_totals: TaxTotals[];
+    //todo public tax_totals: TaxTotals[];
 
     constructor(public administration: Administration, data: APIExternalSalesInvoice) {
         this.id = data.id;
@@ -146,7 +146,6 @@ export class ExternalSalesInvoice {
         this.events = data.events.map(e => new Event(this, e));
     }
 
-    /* todo: Payment
     async addPayment(options: AddPaymentOptions) {
         const {data} = await this.administration.client.rest.addPayment(this, options)
         const payment = new Payment(this, data)
@@ -158,7 +157,6 @@ export class ExternalSalesInvoice {
         await this.administration.client.rest.deletePayment(this, paymentId)
         this.payments = this.payments.filter(p => p.id !== paymentId)
     }
-    */
 
     /* todo: Mark dubious/uncollectible
     async markDubious(){
@@ -166,5 +164,9 @@ export class ExternalSalesInvoice {
 
     async markUncollectible(){
     }
+    */
+
+    /* todo: CreateInvoiceFromAttachment
+        POST /external_sales_invoices/attachment(.:format)
     */
 }

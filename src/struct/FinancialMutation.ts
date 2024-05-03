@@ -31,7 +31,8 @@ export class FinancialMutation {
     public processed_at: Date | null;
     public account_servicer_transaction_id: string | null;
     public payments: Payment[];
-    //ledger_account_bookings: FinancialMutationLedgerAccountBooking[]
+
+    //todo ledger_account_bookings: FinancialMutationLedgerAccountBooking[]
 
     constructor(public administration: Administration, data: APIFinancialMutation) {
         this.id = data.id;

@@ -1,6 +1,6 @@
 import {
     AddAttachmentOptions,
-    AddNoteOptions,
+    AddNoteOptions, AddPaymentOptions,
     APISalesInvoice,
     SendSalesInvoiceOptions,
     UpdateSalesInvoiceOptions
@@ -213,6 +213,7 @@ export class SalesInvoice {
 
     /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_pdf */
     /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_ubl */
+
     /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_packing_slip_pdf */
 
     /**
@@ -233,6 +234,7 @@ export class SalesInvoice {
     }
 
     /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_pause */
+
     /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_resume */
 
     /** */
@@ -241,7 +243,6 @@ export class SalesInvoice {
         return new SalesInvoice(this.administration, data);
     }
 
-    /* todo: Payment
     async addPayment(options: AddPaymentOptions) {
         const {data} = await this.administration.client.rest.addPayment(this, options)
         const payment = new Payment(this, data)
@@ -253,7 +254,6 @@ export class SalesInvoice {
         await this.administration.client.rest.deletePayment(this, paymentId)
         this.payments = this.payments.filter(p => p.id !== paymentId)
     }
-    */
 
     /* todo: Mark dubious/uncollectible
     async markDubious(){
@@ -262,8 +262,4 @@ export class SalesInvoice {
     async markUncollectible(){
     }
     */
-
-    /* todo: CreateInvoiceFromAttachment
-       POST /external_sales_invoices/attachment(.:format)
-     */
 }
