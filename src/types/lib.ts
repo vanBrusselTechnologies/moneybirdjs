@@ -87,21 +87,21 @@ export interface TaxRateSearchOptions {
 }
 
 export interface AddPaymentOptions {
-    "invoice_id": number
-    "payment_date": string,
+    "payment_date": Date,
     /** Both a decimal and a string ‘10,95’ are accepted. Should be a number -1,000,000,000 <= n <= 1,000,000,000. */
     "price": number,
     /** Amount paid expressed in the base currency. Required for foreign currencies. Should be a number -1,000,000,000 <= n <= 1,000,000,000. */
-    "price_base?": number
-    /** Should be a valid financial account id. */
-    "financial_account_id?": string,
-    /** Should be a valid financial mutation id. */
-    "financial_mutation_id?": string,
-    "transaction_identifier?": string,
-    /** Can be private_payment, payment_without_proof, cash_payment, rounding_error, bank_transfer, balance_settlement or invoices_settlement. */
-    "manual_payment_action?": string,
+    "price_base"?: number
+    "transaction_identifier"?: string,
+    "manual_payment_action"?: "private_payment" | "payment_without_proof" | "cash_payment" | "rounding_error" | "bank_transfer" | "balance_settlement" | "invoices_settlement",
     /** Should be a valid ledger account id. */
-    "ledger_account_id?": string,
+    "ledger_account_id"?: string,
+    /** Should be a valid invoice id. */
+    "invoice_id"?: string,
+    /** Should be a valid financial account id. */
+    "financial_account_id"?: string,
+    /** Should be a valid financial mutation id. */
+    "financial_mutation_id"?: string,
 }
 
 export interface AddLedgerAccountOptions {

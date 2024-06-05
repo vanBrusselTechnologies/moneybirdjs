@@ -63,7 +63,7 @@ export interface SendSalesInvoiceOptions {
 
 export interface UpdateSalesInvoiceOptions {
     /** Should be a valid contact id. */
-    contact_id: string,
+    contact_id?: string,
     /** Should be a valid contact person id. */
     contact_person_id?: string,
     update_contact?: boolean,
