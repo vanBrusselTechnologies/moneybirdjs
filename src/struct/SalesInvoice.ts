@@ -133,7 +133,7 @@ export class SalesInvoice {
     }
 
     async delete() {
-        await this.administration.deleteExternalSalesInvoice(this.id)
+        await this.administration.deleteSalesInvoice(this.id)
     }
 
     async addNote(options: AddNoteOptions) {
