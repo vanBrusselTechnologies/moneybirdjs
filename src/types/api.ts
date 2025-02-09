@@ -762,7 +762,7 @@ export interface APIWebhook {
     "id": string,
     "administration_id": string,
     "url": string,
-    "events": APIEvent[],
+    "enabled_events": APIEvent[],
     "last_http_status": null,
     "last_http_body": null,
     "token": string;

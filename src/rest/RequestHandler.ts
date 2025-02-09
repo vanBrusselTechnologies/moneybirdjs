@@ -72,9 +72,9 @@ export class RequestHandler {
                     data = JSON.parse(buffer.toString())
                 } catch (e) {
                     const contentDisposition = res.headers?.get('content-disposition')
-                    if (contentDisposition?.startsWith('attachment')) {
+                    if (contentDisposition?.startsWith('attachment') || contentDisposition?.startsWith('inline;')) {
                         data = buffer
-                    }
+                    } else data = buffer.toString();
                 }
             }
 

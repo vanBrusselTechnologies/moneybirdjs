@@ -14,7 +14,7 @@ import {
     APILedgerAccount,
     APINote, APIPayment,
     APISalesInvoice,
-    APITaxRate,
+    APITaxRate, APIWorkflow,
     ContactPersonOptions,
     ContactSearchOptions,
     Document,
@@ -384,6 +384,13 @@ export class RESTManager {
     public duplicateToCreditInvoice(invoice: SalesInvoice) {
         return this.requestHandler.request<APISalesInvoice>(`${invoice.administration_id}/sales_invoices/${invoice.id}/duplicate_creditinvoice`, {
             method: "PATCH",
+            body: "{}"
+        })
+    }
+
+    public getWorkflows(administration: Administration) {
+        return this.requestHandler.request<APIWorkflow[]>(`${administration.id}/workflows`, {
+            method: "GET",
             body: "{}"
         })
     }

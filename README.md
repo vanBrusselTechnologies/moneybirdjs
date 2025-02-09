@@ -19,6 +19,7 @@ A wrapper for the Moneybird API
 - Ledger Accounts
 - Sales Invoices*
 - Tax rates
+- Workflows
 
 *not all endpoints are yet implemented
 

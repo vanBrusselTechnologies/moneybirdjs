@@ -40,6 +40,7 @@ import {
     FinancialMutation,
     LedgerAccount
 } from "../struct";
+import {Workflow} from "./Workflow";
 
 // noinspection JSUnusedGlobalSymbols
 /** */
@@ -359,5 +360,9 @@ export class Administration {
     //todo: Users
     //todo: Verifications
     //todo: Webhooks
-    //todo: Workflows
+
+    async getWorkflows() {
+        const {data} = await this.client.rest.getWorkflows(this)
+        return data.map((entry) => new Workflow(this, entry))
+    }
 }
