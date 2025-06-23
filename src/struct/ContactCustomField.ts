@@ -1,6 +1,8 @@
 import {APIContactCustomField, CustomFieldSource} from "../types";
 import {CustomField, Contact} from "../struct";
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class ContactCustomField extends CustomField {
     public value: string;
 

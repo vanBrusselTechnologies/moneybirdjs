@@ -5,13 +5,10 @@ import {
     APIPurchaseInvoice,
     UpdatePurchaseInvoiceOptions
 } from "../types";
-import {Administration} from "./Administration";
-import {Note} from "./Note";
-import {Event} from "./Event";
-import {Attachment} from "./Attachment";
-import {DocumentDetail} from "./DocumentDetail";
-import {Payment} from "./Payment";
+import {Administration, Attachment, DocumentDetail, Event, Note, Payment} from '.'
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class PurchaseInvoice {
     public id: string;
     public administration_id: string;
@@ -65,7 +62,7 @@ export class PurchaseInvoice {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.details = data.details.map(d => new DocumentDetail(this, d));
-        this.payments = data.payments.map(p => new Payment(this, p))
+        this.payments = data.payments.map(p => new Payment(p))
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));
@@ -126,7 +123,7 @@ export class PurchaseInvoice {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.details = data.details.map(d => new DocumentDetail(this, d));
-        this.payments = data.payments.map(p => new Payment(this, p))
+        this.payments = data.payments.map(p => new Payment(p))
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));
@@ -134,7 +131,7 @@ export class PurchaseInvoice {
 
     async addPayment(options: AddPaymentOptions) {
         const {data} = await this.administration.client.rest.addPayment(this, options)
-        const payment = new Payment(this, data)
+        const payment = new Payment(data)
         this.payments.push(payment)
         return payment;
     }

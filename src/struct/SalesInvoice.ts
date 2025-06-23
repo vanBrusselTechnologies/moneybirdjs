@@ -5,13 +5,7 @@ import {
     SendSalesInvoiceOptions,
     UpdateSalesInvoiceOptions
 } from "../types";
-import {Administration} from "./Administration";
-import {Note} from "./Note";
-import {Event} from "./Event";
-import {Attachment} from "./Attachment";
-import {DocumentDetail} from "./DocumentDetail";
-import {InvoiceCustomField} from "./InvoiceCustomField";
-import {Payment} from "./Payment";
+import {Administration, Attachment, DocumentDetail, Event, Note, InvoiceCustomField, Payment} from '.'
 
 // noinspection JSUnusedGlobalSymbols
 /** */
@@ -120,7 +114,7 @@ export class SalesInvoice {
         this.url = data.url;
         this.payment_url = data.payment_url;
         this.custom_fields = data.custom_fields.map(n => new InvoiceCustomField(this, n))
-        this.payments = data.payments.map(p => new Payment(this, p));
+        this.payments = data.payments.map(p => new Payment(p));
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));
@@ -205,7 +199,7 @@ export class SalesInvoice {
         this.url = data.url;
         this.payment_url = data.payment_url;
         this.custom_fields = data.custom_fields.map(n => new InvoiceCustomField(this, n))
-        this.payments = data.payments.map(p => new Payment(this, p));
+        this.payments = data.payments.map(p => new Payment(p));
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
         this.events = data.events.map(e => new Event(this, e));
@@ -233,6 +227,7 @@ export class SalesInvoice {
         return this;
     }
 
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_send_reminders */
     /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_pause */
 
     /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_resume */
@@ -245,7 +240,7 @@ export class SalesInvoice {
 
     async addPayment(options: AddPaymentOptions) {
         const {data} = await this.administration.client.rest.addPayment(this, options)
-        const payment = new Payment(this, data)
+        const payment = new Payment(data)
         this.payments.push(payment)
         return payment;
     }

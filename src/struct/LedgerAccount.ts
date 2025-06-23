@@ -6,6 +6,8 @@ import {
     UpdateLedgerAccountOptions
 } from "../types";
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class LedgerAccount {
     id: string;
     administration_id: string;

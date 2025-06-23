@@ -1,5 +1,7 @@
 import {Administration, APITaxRate} from "../types";
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class TaxRate {
     id: string;
     administration_id: string;

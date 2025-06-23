@@ -27,7 +27,7 @@ export interface Response<T> {
     ok: boolean
 }
 
-export type UrlOptions = ContactSearchOptions | DocumentSearchOptions
+export type UrlOptions = ContactSearchOptions | DocumentSearchOptions | UserSearchOptions;
 
 /** The filter argument allows you to filter on the list. Filters are a combination of keys and values. The most common filter method will be period: period:'this_month'. Filtering works the same as in the web application, for more advanced examples, change the filtering in the web application and learn from the resulting URI. */
 export interface Filter {
@@ -126,4 +126,9 @@ export interface UpdateLedgerAccountOptions {
     "parent_id"?: string,
     "allowed_document_types"?: APILedgerAccountAllowedDocumentTypes[],
     "description"?: string
+}
+
+export interface UserSearchOptions {
+    include_accountants?: boolean,
+    include_inactive?: boolean,
 }

@@ -1,5 +1,7 @@
-import {APIPayment, Document, FinancialMutation} from "../types";
+import {APIPayment} from "../types";
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class Payment {
     id: string;
     administration_id: string;
@@ -20,7 +22,7 @@ export class Payment {
     created_at: Date;
     updated_at: Date;
 
-    constructor(public entity: Document | FinancialMutation, data: APIPayment) {
+    constructor(data: APIPayment) {
         this.id = data.id;
         this.administration_id = data.administration_id;
         this.invoice_type = data.invoice_type;

@@ -1,6 +1,8 @@
 import {APIEvent, Document} from "../types";
-import {Contact} from "./Contact";
+import {Contact} from '.';
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class Event {
     administration_id: string;
     user_id: string;

@@ -4,12 +4,10 @@ import {
     APIGeneralDocument,
     UpdateGeneralDocumentOptions
 } from "../types";
-import {Administration} from "./Administration";
-import {Note} from "./Note";
-import {Event} from "./Event";
-import {Attachment} from "./Attachment";
-import {Contact} from "./Contact";
+import {Administration, Attachment, Contact, Event, Note} from '.'
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class GeneralDocument {
     public id: string;
     public administration_id: string;

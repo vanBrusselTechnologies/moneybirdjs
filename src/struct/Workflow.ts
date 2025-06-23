@@ -1,5 +1,7 @@
 import {Administration, APIWorkflow} from "../types";
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class Workflow {
     id: string;
     administration_id: string;

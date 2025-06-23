@@ -1,6 +1,8 @@
 import {APINote, Document} from "../types";
-import {Contact} from "./Contact";
+import {Contact} from '.';
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class Note {
     public id: string;
     public administration_id: string;

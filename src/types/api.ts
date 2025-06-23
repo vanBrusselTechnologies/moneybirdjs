@@ -748,10 +748,11 @@ export interface APIUser {
     "email_validated"?: boolean,
     "language"?: string,
     "time_zone"?: string,
+    "user_type"?: "owner" | "employee" | "accountant",
     "permissions"?: APIUserPermissions[]
 }
 
-export interface APIVerification {
+export interface APIVerifications {
     "emails"?: string[],
     "bank_account_numbers"?: string[],
     "chamber_of_commerce_number"?: string,

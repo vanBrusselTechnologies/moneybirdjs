@@ -173,6 +173,7 @@ export class Contact {
         await this.administration.deleteContact(this.id)
     }
 
+    // todo https://developer.moneybird.com/api/contacts/#patch_contacts_id_archive
     // todo async addAdditionalCharges
     // todo async getAdditionalCharges
 
@@ -207,5 +208,6 @@ export class Contact {
 
     // todo async getMoneybirdPaymentsMandate
     // todo async requestNewMoneybirdPaymentsMandate
+    // todo async requestNewMoneybirdPaymentsMandate/url
     // todo async deleteMoneybirdPaymentsMandate
 }

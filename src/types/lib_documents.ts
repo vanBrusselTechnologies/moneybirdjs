@@ -28,7 +28,7 @@ import {
 } from "./lib_externalSalesInvoice";
 import {AddReceiptOptions, ReceiptSearchOptions, UpdateReceiptOptions} from "./lib_documents_receipt";
 import {AddTypelessDocumentOptions, TypelessDocumentSearchOptions} from "./lib_documents_typeless";
-import {SalesInvoice} from "../struct/SalesInvoice";
+import {SalesInvoice} from "../struct";
 import {AddSalesInvoiceOptions, SalesInvoiceSearchOptions, UpdateSalesInvoiceOptions} from "./lib_salesInvoice";
 
 export * from "./lib_documents_general";

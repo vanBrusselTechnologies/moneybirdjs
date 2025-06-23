@@ -15,10 +15,14 @@ A wrapper for the Moneybird API
     - Receipts
     - Typeless documents
 - External Sales Invoices*
+- Financial Accounts
 - Financial Mutations
 - Ledger Accounts
+- Payments
 - Sales Invoices*
 - Tax rates
+- Users
+- Verifications
 - Workflows
 
 *not all endpoints are yet implemented

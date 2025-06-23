@@ -1,8 +1,7 @@
 import {AddAttachmentOptions, APITypelessDocument} from "../types";
-import {Administration} from "./Administration";
-import {Event} from "./Event";
-import {Attachment} from "./Attachment";
+import {Administration, Event, Attachment} from '.'
 
+// noinspection JSUnusedGlobalSymbols
 /**
  * Typeless documents are documents of which the type is not yet known. For example, a document uploaded via email or via the bulk uploader. It is not possible to update a typeless document, except for adding attachments. You will need to set its type first. You cannot set the type of typeless documents using the API yet, but you can do it via the website.
  */

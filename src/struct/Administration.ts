@@ -22,7 +22,7 @@ import {
     PurchaseInvoiceSearchOptions,
     ReceiptSearchOptions, SalesInvoiceSearchOptions,
     TaxRateSearchOptions,
-    TypelessDocumentSearchOptions
+    TypelessDocumentSearchOptions, UserSearchOptions
 } from "../types";
 import {Client} from "../client/Client";
 import {
@@ -30,17 +30,19 @@ import {
     CustomField,
     DocumentStyle,
     ExternalSalesInvoice,
+    FinancialAccount,
+    FinancialMutation,
     GeneralDocument,
     JournalDocument,
+    LedgerAccount,
+    Payment,
     PurchaseInvoice,
     Receipt,
     SalesInvoice,
     TaxRate,
     TypelessDocument,
-    FinancialMutation,
-    LedgerAccount
+    User, Workflow, Verifications
 } from "../struct";
-import {Workflow} from "./Workflow";
 
 // noinspection JSUnusedGlobalSymbols
 /** */
@@ -260,7 +262,11 @@ export class Administration {
         await this.client.rest.deleteDocument(this, 'externalSalesInvoice', externalSalesInvoiceId, refresh_journal_entries)
     }
 
-    //todo: Financial Accounts
+    /** Retrieve all available financial accounts for the administration */
+    async getFinancialAccounts() {
+        const {data} = await this.client.rest.getFinancialAccounts(this)
+        return data.map((entry) => new FinancialAccount(this, entry))
+    }
 
     /** When requesting huge number of mutations, use the Sync API: {@link listIdsAndVersions()} + {@link listFinancialMutationsByIds()} */
     async getFinancialMutations(filter: Filter) {
@@ -305,12 +311,15 @@ export class Administration {
         await this.client.rest.deleteLedgerAccount(this, ledgerAccountId)
     }
 
-    //todo: Payments
+    async getPayment(paymentId: string) {
+        const {data} = await this.client.rest.getPayment(this, paymentId)
+        return new Payment(data)
+    }
+
     //todo: Products
     //todo: Projects
     //todo: Purchase transactions
     //todo: Recurring Sales Invoices
-    //todo: Sales Invoices
 
     async listSalesInvoicesByIds(ids: Array<string>) {
         const {data} = await this.client.rest.listDocumentsByIds<APISalesInvoice>(this, 'salesInvoice', ids);
@@ -346,8 +355,7 @@ export class Administration {
         await this.client.rest.deleteDocument(this, 'salesInvoice', salesInvoiceId, refresh_journal_entries)
     }
 
-    // todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_send_reminders
-
+    //todo: Subscription templates
     //todo: Subscriptions
 
     /** Returns a paginated list of all available tax rates for the administration */
@@ -357,8 +365,19 @@ export class Administration {
     }
 
     //todo: Time entries
-    //todo: Users
-    //todo: Verifications
+
+    /** Returns a list of users within the administration. */
+    async getUsers(options: UserSearchOptions = {}) {
+        const {data} = await this.client.rest.getUsers(this, options)
+        return data.map((entry) => new User(this, entry))
+    }
+
+    /** Retrieve all the verifications within an administration. Returns all verified e-mail addresses and bank account numbers, as well as the verified chamber of commerce number and tax number. */
+    async getVerifications() {
+        const {data} = await this.client.rest.getVerifications(this)
+        return new Verifications(this, data)
+    }
+
     //todo: Webhooks
 
     async getWorkflows() {

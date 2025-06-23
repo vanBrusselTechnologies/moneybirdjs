@@ -5,11 +5,10 @@ import {
     APIJournalDocumentEntry,
     UpdateJournalDocumentOptions
 } from "../types";
-import {Administration} from "./Administration";
-import {Note} from "./Note";
-import {Event} from "./Event";
-import {Attachment} from "./Attachment";
+import {Administration, Attachment, Event, Note} from '.'
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class JournalDocument {
     public id: string;
     public administration_id: string;

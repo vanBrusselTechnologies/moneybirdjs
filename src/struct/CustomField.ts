@@ -1,6 +1,8 @@
 import {APICustomField, CustomFieldSource} from "../types";
 import {Administration} from "../struct";
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class CustomField {
     public id: string;
     public administration_id: string;

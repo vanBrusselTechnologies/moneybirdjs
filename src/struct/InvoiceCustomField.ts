@@ -1,7 +1,8 @@
-import {APIContactCustomField, APIInvoiceCustomField, CustomFieldSource, SalesInvoice} from "../types";
-import {CustomField} from "./CustomField";
-import {Contact} from "./Contact";
+import {APIInvoiceCustomField, CustomFieldSource, SalesInvoice} from "../types";
+import {CustomField} from '.'
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class InvoiceCustomField extends CustomField {
     public value: string;
 

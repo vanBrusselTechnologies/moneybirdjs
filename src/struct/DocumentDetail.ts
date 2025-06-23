@@ -1,5 +1,7 @@
 import {APIDocumentDetail, Entity} from "../types";
 
+// noinspection JSUnusedGlobalSymbols
+/** */
 export class DocumentDetail {
     public id: string;
     public administration_id: string;

@@ -9,12 +9,12 @@ import {
     APIContactPerson,
     APICustomField,
     APIDocument,
-    APIDocumentStyle,
+    APIDocumentStyle, APIFinancialAccount,
     APIFinancialMutation,
     APILedgerAccount,
     APINote, APIPayment,
     APISalesInvoice,
-    APITaxRate, APIWorkflow,
+    APITaxRate, APIUser, APIVerifications, APIWorkflow,
     ContactPersonOptions,
     ContactSearchOptions,
     Document,
@@ -28,7 +28,7 @@ import {
     FinancialMutationUnlinkBookingOptions, SendSalesInvoiceOptions,
     TaxRateSearchOptions,
     UpdateContactOptions,
-    UpdateLedgerAccountOptions
+    UpdateLedgerAccountOptions, UserSearchOptions
 } from "../types";
 import {Util} from "../util/Util";
 import {
@@ -274,6 +274,13 @@ export class RESTManager {
         })
     }
 
+    public getFinancialAccounts(administration: Administration) {
+        return this.requestHandler.request<APIFinancialAccount[]>(`${administration.id}/financial_accounts`, {
+            method: "GET",
+            body: "{}"
+        })
+    }
+
     public getFinancialMutations(administration: Administration, filter: Filter) {
         const query = Util.queryString({filter: filter});
         return this.requestHandler.request<APIFinancialMutation[]>(`${administration.id}/financial_mutations${query}`, {
@@ -384,6 +391,28 @@ export class RESTManager {
     public duplicateToCreditInvoice(invoice: SalesInvoice) {
         return this.requestHandler.request<APISalesInvoice>(`${invoice.administration_id}/sales_invoices/${invoice.id}/duplicate_creditinvoice`, {
             method: "PATCH",
+            body: "{}"
+        })
+    }
+
+    public getPayment(administration: Administration, id: string) {
+        return this.requestHandler.request<APIPayment>(`${administration.id}/payments/${id}`, {
+            method: "GET",
+            body: "{}"
+        })
+    }
+
+    public getUsers(administration: Administration, urlOptions: UserSearchOptions) {
+        const query = Util.queryString(urlOptions);
+        return this.requestHandler.request<APIUser[]>(`${administration.id}/users${query}`, {
+            method: "GET",
+            body: "{}"
+        })
+    }
+
+    public getVerifications(administration: Administration) {
+        return this.requestHandler.request<APIVerifications>(`${administration.id}/verifications`, {
+            method: "GET",
             body: "{}"
         })
     }
