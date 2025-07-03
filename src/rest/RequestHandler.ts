@@ -26,7 +26,7 @@ export class RequestHandler {
                 'Content-Type': contentType,
                 ...options.additionalHeaders
             }
-            const res = await fetch(`${Constants.APIBaseURL}${path}`, {
+            const res = await fetch(`${Constants.APIBaseURL}${path}.${Constants.format}`, {
                 method: options.method, headers: headers,
                 body: options.method !== 'GET' ? options.body : undefined
             })
