@@ -62,7 +62,7 @@ export class RESTManager {
         const att = docPath === 'external_sales_invoices' ? 'attachment' : 'attachments'
         return this.requestHandler.request<void>(`${doc.administration_id}/${docPath}/${doc.id}/${att}.${Constants.format}`, {
             method: "POST",
-            body: form.getBuffer(),
+            body: Util.toArrayBuffer(form.getBuffer()),
             additionalHeaders: form.getHeaders()
         })
     }

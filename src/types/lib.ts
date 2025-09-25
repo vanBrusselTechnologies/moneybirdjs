@@ -15,7 +15,7 @@ export interface RequestOptions {
     /* The request method */
     method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
     /* The request body */
-    body: string | Buffer,
+    body: string | ArrayBuffer,
     additionalHeaders?: { 'content-type'?: string, [key: string]: any }
 }
 
