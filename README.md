@@ -34,8 +34,8 @@ const {Client} = require('moneybirdjs');
 
 const client = new Client('api-token');
 
-client.getAdministrations().then(async admin => {
-    const contacts = await admin.getContacts();
+client.getAdministrations().then(async admins => {
+    const contacts = await admins[0].getContacts();
     console.log(contacts);
 })
 ```
