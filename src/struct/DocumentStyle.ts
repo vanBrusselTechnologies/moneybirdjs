@@ -1,8 +1,6 @@
+import {Administration} from ".";
 import {APIDocumentField, APIDocumentStyle} from "../types";
-import {Administration} from "../struct";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class DocumentStyle {
     id: string;
     administration_id: string;

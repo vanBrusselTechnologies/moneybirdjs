@@ -1,3 +1,4 @@
+import {Administration, Attachment, Event, Note} from "."
 import {
     AddAttachmentOptions,
     AddNoteOptions,
@@ -5,10 +6,7 @@ import {
     APIJournalDocumentEntry,
     UpdateJournalDocumentOptions
 } from "../types";
-import {Administration, Attachment, Event, Note} from '.'
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class JournalDocument {
     public id: string;
     public administration_id: string;
@@ -35,7 +33,7 @@ export class JournalDocument {
         this.version = data.version;
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
+        this.events = data.events.map(e => new Event(e));
     }
 
     async update(options: UpdateJournalDocumentOptions, allTaxes?: boolean) {
@@ -82,6 +80,6 @@ export class JournalDocument {
         this.version = data.version;
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
+        this.events = data.events.map(e => new Event(e));
     }
 }

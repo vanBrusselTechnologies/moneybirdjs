@@ -1,10 +1,9 @@
-import {Administration, APIWorkflow} from "../types";
+import {APIWorkflow, Identifier} from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
+/** Workflows determine the settings of the invoice and estimate workflows. */
 export class Workflow {
-    id: string;
-    administration_id: string;
+    id: Identifier;
+    administration_id: Identifier;
     type: "EstimateWorkflow" | "InvoiceWorkflow";
     name: string;
     default: boolean;
@@ -15,7 +14,7 @@ export class Workflow {
     created_at: Date;
     updated_at: Date;
 
-    constructor(public administration: Administration, data: APIWorkflow) {
+    constructor(data: APIWorkflow) {
         this.id = data.id;
         this.administration_id = data.administration_id;
         this.type = data.type;

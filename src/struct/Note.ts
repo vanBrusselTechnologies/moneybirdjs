@@ -1,17 +1,15 @@
+import {Contact} from ".";
 import {APINote, Document} from "../types";
-import {Contact} from '.';
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class Note {
     public id: string;
     public administration_id: string;
     public entity_id: string;
-    public entity_type: string | "Contact";
+    public entity_type: string | "Contact" | "SalesInvoice";
     public user_id: string;
     public assignee_id: string;
     public todo: boolean;
-    public note: string;
+    public note: null | string;
     public completed_at?: Date;
     public completed_by_id: null | string;
     public todo_type: null | string;

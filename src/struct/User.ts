@@ -1,7 +1,5 @@
-import {Administration, APIUser, APIUserPermissions} from "../types";
+import {APIUser, APIUserPermissions} from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class User {
     public id: string;
     public name: string;
@@ -14,7 +12,7 @@ export class User {
     public user_type?: "owner" | "employee" | "accountant";
     public permissions?: APIUserPermissions[];
 
-    constructor(public administration: Administration, data: APIUser) {
+    constructor(data: APIUser) {
         this.id = data.id;
         this.name = data.name;
         this.created_at = new Date(data.created_at);

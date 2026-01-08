@@ -1,19 +1,68 @@
-import {ContactSearchOptions} from "./lib_contact";
-import {Document, DocumentEntityType, DocumentSearchOptions} from "./lib_documents";
+import {Document, DocumentEntityType} from "./lib_documents";
 import {Contact, FinancialMutation} from "../struct";
 import {APILedgerAccountAllowedDocumentTypes, APILedgerAccountType} from "./api";
 
 export * from "./lib_contact";
 export * from "./lib_documents";
 export * from "./lib_financialMutation";
+export * from "./lib_reports";
 
 export type EntityType = 'contact' | DocumentEntityType | 'financialMutation';
 
-export type Entity = Contact | Document | FinancialMutation
+export type Entity = Contact | Document | FinancialMutation;
 
-export interface RequestOptions {
+/**
+ * A unique record identifier
+ * @example "458026356994737217"
+ */
+export type Identifier = `${number}`;
+
+/**
+ * The period can be a date range or one of the presets. Date ranges must consist of whole months (start on the 1st, end on the last day of a month).
+ *
+ * **Date range formats:**
+ * - `YYYYMMDD..YYYYMMDD` (e.g., `20250101..20250131`)
+ * - `YYYYMM..YYYYMM` (e.g., `202501..202501`)
+ * - `YYYYMM` (e.g., `202501`)
+ *
+ * **Preset options:**
+ * - `this_month` - Current month (default if not specified)
+ * - `prev_month` - Previous month
+ * - `next_month` - Next month
+ * - `this_quarter` - Current quarter
+ * - `prev_quarter` - Previous quarter
+ * - `next_quarter` - Next quarter
+ * - `this_year` - Current year
+ * - `prev_year` - Previous year
+ * - `next_year` - Next year
+ *
+ * **Period limits:**
+ * - Most endpoints: Maximum 1 month
+ * - Profit loss and Balance sheet: Maximum 12 months
+ *
+ * @example "20250101..20250131"
+ * @default this_month
+ */
+export type Period =
+    `${number}..${number}`
+    | `${number}`
+    | 'this_month'
+    | 'prev_month'
+    | 'next_month'
+    | 'this_quarter'
+    | 'prev_quarter'
+    | 'next_quarter'
+    | 'this_year'
+    | 'prev_year'
+    | 'next_year';
+
+export type RequestOptions = {
     /* The request method */
-    method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    method: 'GET',
+    additionalHeaders?: { 'content-type'?: string, [key: string]: any }
+} |  {
+    /* The request method */
+    method: 'POST' | 'PATCH' | 'PUT' | 'DELETE',
     /* The request body */
     body: string | ArrayBuffer,
     additionalHeaders?: { 'content-type'?: string, [key: string]: any }
@@ -26,8 +75,6 @@ export interface Response<T> {
     path: string,
     ok: boolean
 }
-
-export type UrlOptions = ContactSearchOptions | DocumentSearchOptions | UserSearchOptions;
 
 /** The filter argument allows you to filter on the list. Filters are a combination of keys and values. The most common filter method will be period: period:'this_month'. Filtering works the same as in the web application, for more advanced examples, change the filtering in the web application and learn from the resulting URI. */
 export interface Filter {
@@ -80,9 +127,9 @@ export interface TaxRateSearchOptions {
     show_tax?: boolean,
     /** Use true to select active tax rates. Use false for inactive tax rates. No value will select both */
     active?: boolean,
-    /** Tax rates created after the given time (exclusive). The time to compare with is in UTC timezone */
+    /** Tax rates created after the given time (exclusive). The time to compare with is in the UTC timezone */
     created_after?: Date,
-    /** Tax rates updated after the given time (exclusive). The time to compare with is in UTC timezone */
+    /** Tax rates updated after the given time (exclusive). The time to compare with is in the UTC timezone */
     updated_after?: Date,
 }
 
@@ -105,7 +152,7 @@ export interface AddPaymentOptions {
 }
 
 export interface AddLedgerAccountOptions {
-    /** Should be unique for this combination of administration and account type. */
+    /** Should be unique for this combination of an administration and account type. */
     "name": string,
     "account_type": APILedgerAccountType,
     /** Also known as general ledger code. Should be unique. */
@@ -117,7 +164,7 @@ export interface AddLedgerAccountOptions {
 }
 
 export interface UpdateLedgerAccountOptions {
-    /** Should be unique for this combination of administration and account type. */
+    /** Should be unique for this combination of an administration and account type. */
     "name"?: string,
     "account_type"?: APILedgerAccountType,
     /** Also known as general ledger code. Should be unique. */

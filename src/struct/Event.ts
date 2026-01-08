@@ -1,8 +1,5 @@
-import {APIEvent, Document} from "../types";
-import {Contact} from '.';
+import {APIEvent} from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class Event {
     administration_id: string;
     user_id: string;
@@ -13,7 +10,7 @@ export class Event {
     created_at: Date;
     updated_at: Date;
 
-    constructor(public entity: Contact | Document, data: APIEvent) {
+    constructor(data: APIEvent) {
         this.administration_id = data.administration_id;
         this.user_id = data.user_id;
         this.action = data.action;

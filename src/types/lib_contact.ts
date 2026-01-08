@@ -10,11 +10,11 @@ export interface ContactSearchOptions {
 }
 
 export interface AddContactOptions {
-    /** A contact requires a non-blank company_name, firstname or lastname. */
+    /** A contact requires a non-blank company_name, firstname, or lastname. */
     "company_name"?: string,
-    /** A contact requires a non-blank company_name, firstname or lastname. */
+    /** A contact requires a non-blank company_name, firstname, or lastname. */
     "firstname"?: string,
-    /** A contact requires a non-blank company_name, firstname or lastname. */
+    /** A contact requires a non-blank company_name, firstname, or lastname. */
     "lastname"?: string,
     "address1"?: string,
     "address2"?: string,
@@ -61,11 +61,11 @@ export interface AddContactOptions {
 }
 
 export interface UpdateContactOptions {
-    /** A contact requires a non-blank company_name, firstname or lastname. */
+    /** A contact requires a non-blank company_name, firstname, or lastname. */
     "company_name"?: string,
-    /** A contact requires a non-blank company_name, firstname or lastname. */
+    /** A contact requires a non-blank company_name, firstname, or lastname. */
     "firstname"?: string,
-    /** A contact requires a non-blank company_name, firstname or lastname. */
+    /** A contact requires a non-blank company_name, firstname, or lastname. */
     "lastname"?: string,
     "address1"?: string,
     "address2"?: string,
@@ -112,7 +112,7 @@ export interface ContactPersonOptions {
     firstname:string,
     lastname:string,
     phone?:string,
-    /** Should be a valid email addresses */
+    /** Should be a valid email address */
     email?:string,
     department?: string
 }

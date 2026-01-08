@@ -1,59 +1,92 @@
+import {Client} from "../client/Client";
+import {
+    AssetsReport,
+    BalanceSheetReport,
+    CashFlowReport,
+    Contact,
+    CreditorsReport,
+    CustomField,
+    DebtorsReport,
+    DocumentStyle,
+    ExpensesByContactReport,
+    ExpensesByProjectReport,
+    ExternalSalesInvoice,
+    FinancialAccount,
+    FinancialMutation,
+    GeneralDocument,
+    GeneralLedgerReport,
+    JournalDocument,
+    JournalEntriesReport,
+    LedgerAccount,
+    Payment,
+    ProfitLossReport,
+    PurchaseInvoice,
+    Receipt,
+    RevenueByContactReport,
+    RevenueByProjectReport,
+    SalesInvoice,
+    SubscriptionsReport,
+    TaxRate,
+    TaxReport,
+    TypelessDocument,
+    User,
+    Verifications,
+    Workflow
+} from ".";
 import {
     AddContactOptions,
     AddExternalSalesInvoiceOptions,
     AddGeneralDocumentOptions,
-    AddJournalDocumentOptions, AddLedgerAccountOptions,
+    AddJournalDocumentOptions,
+    AddLedgerAccountOptions,
     AddPurchaseInvoiceOptions,
-    AddReceiptOptions, AddSalesInvoiceOptions,
+    AddReceiptOptions,
+    AddSalesInvoiceOptions,
     AddTypelessDocumentOptions,
     APIAdministration,
     APIExternalSalesInvoice,
     APIGeneralDocument,
     APIJournalDocument,
     APIPurchaseInvoice,
-    APIReceipt, APISalesInvoice,
+    APIReceipt,
+    APISalesInvoice,
     APITypelessDocument,
+    CashFlowReportOptions,
     ContactSearchOptions,
     EntityType,
     ExternalSalesInvoiceSearchOptions,
     Filter,
     GeneralDocumentSearchOptions,
+    Identifier,
     JournalDocumentSearchOptions,
+    JournalEntriesReportOptions,
+    PagedReportOptions,
+    ProfitLossReportOptions,
     PurchaseInvoiceSearchOptions,
-    ReceiptSearchOptions, SalesInvoiceSearchOptions,
+    ReceiptSearchOptions,
+    ReportOptions,
+    SalesInvoiceSearchOptions,
     TaxRateSearchOptions,
-    TypelessDocumentSearchOptions, UserSearchOptions
+    TypelessDocumentSearchOptions,
+    UserSearchOptions
 } from "../types";
-import {Client} from "../client/Client";
-import {
-    Contact,
-    CustomField,
-    DocumentStyle,
-    ExternalSalesInvoice,
-    FinancialAccount,
-    FinancialMutation,
-    GeneralDocument,
-    JournalDocument,
-    LedgerAccount,
-    Payment,
-    PurchaseInvoice,
-    Receipt,
-    SalesInvoice,
-    TaxRate,
-    TypelessDocument,
-    User, Workflow, Verifications
-} from "../struct";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
+/** Administrations are the top level entities in Moneybird. */
 export class Administration {
-    public id: string;
+    public id: Identifier;
     public name: string;
-    public language: string;
+    /** The ISO 639-1 language code used in the administration */
+    public language: "nl" | "nl-be" | "en";
+    /** The ISO 4217 currency code */
     public currency: string;
+    /** The ISO 3166-1 alpha-2 code the administration country */
     public country: string;
+    /** The time zone of the administration */
     public time_zone: string;
+    /** The type of access the user has to this administration */
     public access: string;
+    public suspended: boolean;
+    public period_locked_until?: Date;
 
     constructor(public client: Client, data: APIAdministration) {
         this.id = data.id;
@@ -63,6 +96,8 @@ export class Administration {
         this.currency = data.currency;
         this.time_zone = data.time_zone;
         this.access = data.access;
+        this.suspended = data.suspended;
+        if (data.period_locked_until) this.period_locked_until = new Date(data.period_locked_until);
     }
 
     /**
@@ -320,7 +355,176 @@ export class Administration {
     //todo: Projects
     //todo: Purchase transactions
     //todo: Recurring Sales Invoices
+//#region Reports
+    /**
+     * Get the assets report for the administration.
+     * @see https://developer.moneybird.com/api/reports#assets-report
+     */
+    async getAssetsReport(options?: ReportOptions) {
+        const {data} = await this.client.rest.getAssetsReport(this, options)
+        return new AssetsReport(data)
+    }
 
+    /**
+     * Get the balance sheet report for the administration showing the financial position at the end of the specified period.
+     * @see https://developer.moneybird.com/api/reports#balance-sheet-report
+     */
+    async getBalanceSheetReport(options?: ReportOptions) {
+        const {data} = await this.client.rest.getBalanceSheetReport(this, options)
+        return new BalanceSheetReport(data)
+    }
+
+    /**
+     * Get the cash flow report for the administration showing cash received and cash paid during the specified period.
+     * @see https://developer.moneybird.com/api/reports#cash-flow-report
+     */
+    async getCashFlowReport(options?: CashFlowReportOptions) {
+        const {data} = await this.client.rest.getCashFlowReport(this, options)
+        return new CashFlowReport(data)
+    }
+
+    /**
+     * Returns a creditors report for the specified administration.
+     * @see https://developer.moneybird.com/api/reports#creditors-report
+     */
+    async getCreditorsReport(options?: PagedReportOptions) {
+        const {data} = await this.client.rest.getCreditorsReport(this, options)
+        return new CreditorsReport(data)
+    }
+
+    /**
+     * Returns a debtors report for the specified administration.
+     * @see https://developer.moneybird.com/api/reports#debtors-report
+     */
+    async getDebtorsReport(options?: PagedReportOptions) {
+        const {data} = await this.client.rest.getDebtorsReport(this, options)
+        return new DebtorsReport(data)
+    }
+
+    /**
+     * Returns an expenses-by-contact report for the specified administration.
+     * @see https://developer.moneybird.com/api/reports#expenses-by-contact-report
+     */
+    async getExpensesByContactReport(options?: PagedReportOptions) {
+        const {data} = await this.client.rest.getExpensesByContactReport(this, options)
+        return new ExpensesByContactReport(data)
+    }
+
+    /**
+     * Returns an expenses-by-project report for the specified administration.
+     * @see https://developer.moneybird.com/api/reports#expenses-by-project-report
+     */
+    async getExpensesByProjectReport(options?: PagedReportOptions) {
+        const {data} = await this.client.rest.getExpensesByProjectReport(this, options)
+        return new ExpensesByProjectReport(data)
+    }
+
+    /**
+     * Queue the export of an auditfile (XAF XML format) for the specified year. The auditfile will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * The administration must not have any ledger accounts with missing or duplicate account IDs, and the specified year must contain journal entries.
+     * @param year The year for which to generate the auditfile
+     * @see https://developer.moneybird.com/api/auditfile#export-auditfile
+     */
+    async exportAuditfile(year: number) {
+        await this.client.rest.exportAuditfile(this, year)
+    }
+
+    /**
+     * Queue the export of a brugstaat XML file for the specified year. The file will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * All ledger accounts must have valid RGS taxonomy codes assigned.
+     * @param year The year for which to generate the auditfile
+     * @see https://developer.moneybird.com/api/brugstaat#export-brugstaat
+     */
+    async exportBrugstaat(year: number) {
+        await this.client.rest.exportBrugstaat(this, year)
+    }
+
+    /**
+     * Queue the export of ledger accounts (grootboekkaarten) to an Excel file for the specified year. This file contains all bookings and can be used for manual audits. The file will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * The specified year must contain journal entries.
+     * @param year The year for which to generate the auditfile
+     * @see https://developer.moneybird.com/api/ledger_accounts#export-ledger-accounts
+     */
+    async exportLedgerAccounts(year: number) {
+        await this.client.rest.exportLedgerAccounts(this, year)
+    }
+
+    /**
+     * Get the general ledger report for the administration showing all ledger accounts with their balances and movements during the specified period.
+     * @see https://developer.moneybird.com/api/reports#general-ledger-report
+     */
+    async getGeneralLedgerReport(options?: ReportOptions) {
+        const {data} = await this.client.rest.getGeneralLedgerReport(this, options)
+        return new GeneralLedgerReport(data)
+    }
+
+    /**
+     * Get the journal entries report showing all bookings within the specified period.
+     * This endpoint allows filtering by various criteria, including project, contact, ledger account, and account types.
+     *
+     * **Requirements:**
+     * - At least one of project_id, contact_id, or ledger_account_id is required
+     * - When account_type is provided, either contact_id or project_id must also be specified
+     *
+     * **Example Use Cases:**
+     * - To get a report for revenue by project detail, use account_type parameter with the value "revenue" and the required project_id
+     * - To get a report for revenue by contact detail, use account_type parameter with the value "revenue" and the required contact_id
+     * - To get a report for expenses by project detail, make one request for account_type "expenses" and one for "direct_costs", both with the required project_id
+     * - To get a report for expenses by contact detail, make one request for account_type "expenses" and one for "direct_costs", both with the required contact_id
+     * @see https://developer.moneybird.com/api/reports#journal-entries-report
+     */
+    async getJournalEntriesReport(options?: JournalEntriesReportOptions) {
+        const {data} = await this.client.rest.getJournalEntriesReport(this, options)
+        return new JournalEntriesReport(data)
+    }
+
+    /**
+     * Get the profit loss report for the administration.
+     * @see https://developer.moneybird.com/api/reports#profit-loss-report
+     */
+    async getProfitLossReport(options?: ProfitLossReportOptions) {
+        const {data} = await this.client.rest.getProfitLossReport(this, options)
+        return new ProfitLossReport(data)
+    }
+
+    /**
+     * Returns a revenue-by-contact report for the specified administration.
+     * @see https://developer.moneybird.com/api/reports#revenue-by-contact-report
+     */
+    async getRevenueByContactReport(options?: PagedReportOptions) {
+        const {data} = await this.client.rest.getRevenueByContactReport(this, options)
+        return new RevenueByContactReport(data)
+    }
+
+    /**
+     * Returns a revenue-by-project report for the specified administration.
+     * @see https://developer.moneybird.com/api/reports#revenue-by-project-report
+     */
+    async getRevenueByProjectReport(options?: PagedReportOptions) {
+        const {data} = await this.client.rest.getRevenueByProjectReport(this, options)
+        return new RevenueByProjectReport(data)
+    }
+
+    /**
+     * Get the subscriptions report for the administration.
+     * @see https://developer.moneybird.com/api/reports#subscriptions-report
+     */
+    async getSubscriptionsReport(options?: ReportOptions) {
+        const {data} = await this.client.rest.getSubscriptionsReport(this, options)
+        return new SubscriptionsReport(data)
+    }
+
+    /**
+     * Get the tax report for the administration.
+     * @see https://developer.moneybird.com/api/reports#tax-report
+     */
+    async getTaxReport(options?: ReportOptions) {
+        const {data} = await this.client.rest.getTaxReport(this, options)
+        return new TaxReport(data)
+    }
+
+//#endregion Reports
+    /** */
     async listSalesInvoicesByIds(ids: Array<string>) {
         const {data} = await this.client.rest.listDocumentsByIds<APISalesInvoice>(this, 'salesInvoice', ids);
         return data.map((entry) => new SalesInvoice(this, entry))
@@ -361,7 +565,7 @@ export class Administration {
     /** Returns a paginated list of all available tax rates for the administration */
     async getTaxRates(filter: TaxRateSearchOptions = {tax_rate_type: 'all'}) {
         const {data} = await this.client.rest.getTaxRates(this, filter)
-        return data.map((entry) => new TaxRate(this, entry))
+        return data.map((entry) => new TaxRate(entry))
     }
 
     //todo: Time entries
@@ -369,19 +573,26 @@ export class Administration {
     /** Returns a list of users within the administration. */
     async getUsers(options: UserSearchOptions = {}) {
         const {data} = await this.client.rest.getUsers(this, options)
-        return data.map((entry) => new User(this, entry))
+        return data.map((entry) => new User(entry))
     }
 
-    /** Retrieve all the verifications within an administration. Returns all verified e-mail addresses and bank account numbers, as well as the verified chamber of commerce number and tax number. */
+    /**
+     * Retrieve all the verifications within an administration. Returns all verified e-mail addresses and bank account numbers, as well as the verified chamber of commerce number and tax number.
+     * @see https://developer.moneybird.com/api/verifications#retrieve-verifications
+     */
     async getVerifications() {
         const {data} = await this.client.rest.getVerifications(this)
-        return new Verifications(this, data)
+        return new Verifications(data)
     }
 
     //todo: Webhooks
 
+    /**
+     * Returns a list of all the workflows of an administration.
+     * @see https://developer.moneybird.com/api/workflows#retrieve-available-workflows
+     */
     async getWorkflows() {
         const {data} = await this.client.rest.getWorkflows(this)
-        return data.map((entry) => new Workflow(this, entry))
+        return data.map((entry) => new Workflow(entry))
     }
 }

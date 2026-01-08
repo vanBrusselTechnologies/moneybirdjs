@@ -1,14 +1,13 @@
+import {Administration, Attachment, DocumentDetail, Event, InvoiceCustomField, Note, Payment} from "."
 import {
     AddAttachmentOptions,
-    AddNoteOptions, AddPaymentOptions,
+    AddNoteOptions,
+    AddPaymentOptions,
     APISalesInvoice,
     SendSalesInvoiceOptions,
     UpdateSalesInvoiceOptions
 } from "../types";
-import {Administration, Attachment, DocumentDetail, Event, Note, InvoiceCustomField, Payment} from '.'
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class SalesInvoice {
     public id: string;
     public administration_id: string;
@@ -96,7 +95,7 @@ export class SalesInvoice {
         this.public_view_code = data.public_view_code;
         this.public_view_code_expires_at = new Date(data.public_view_code_expires_at);
         this.version = data.version;
-        this.details = data.details.map(d => new DocumentDetail(this, d));
+        this.details = data.details.map(d => new DocumentDetail(d));
         this.total_paid = parseFloat(data.total_paid);
         this.total_unpaid = parseFloat(data.total_unpaid);
         this.total_unpaid_base = parseFloat(data.total_unpaid_base);
@@ -117,7 +116,7 @@ export class SalesInvoice {
         this.payments = data.payments.map(p => new Payment(p));
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
+        this.events = data.events.map(e => new Event(e));
     }
 
     async update(options: UpdateSalesInvoiceOptions) {
@@ -151,6 +150,51 @@ export class SalesInvoice {
         this.attachments = this.attachments.filter(a => a.id !== attachmentId)
     }
 
+    /**
+     * This endpoint provides two options: sending the invoice and scheduling sending in the future. When sending now, you can provide a send method, email address and message. If you don’t provide any arguments, the defaults from the contact and workflow will be used.
+     *
+     * When scheduling sending, set the boolean sending_scheduled to true and provide an invoice_date.
+     */
+    async send(options: SendSalesInvoiceOptions = {}) {
+        const {data} = await this.administration.client.rest.sendInvoice(this, options);
+        this.setData(data);
+        return this;
+    }
+
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_pdf */
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_ubl */
+
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_packing_slip_pdf */
+
+    async registerPaymentCreditInvoice() {
+        const {data} = await this.administration.client.rest.registerPaymentCreditInvoice(this);
+        this.setData(data);
+        return this;
+    }
+
+    /** */
+    async duplicateToCreditInvoice() {
+        const {data} = await this.administration.client.rest.duplicateToCreditInvoice(this);
+        return new SalesInvoice(this.administration, data);
+    }
+
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_send_reminders */
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_pause */
+
+    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_resume */
+
+    async addPayment(options: AddPaymentOptions) {
+        const {data} = await this.administration.client.rest.addPayment(this, options)
+        const payment = new Payment(data)
+        this.payments.push(payment)
+        return payment;
+    }
+
+    async deletePayment(paymentId: string) {
+        await this.administration.client.rest.deletePayment(this, paymentId)
+        this.payments = this.payments.filter(p => p.id !== paymentId)
+    }
+
     private setData(data: APISalesInvoice) {
         this.id = data.id;
         this.administration_id = data.administration_id;
@@ -181,7 +225,7 @@ export class SalesInvoice {
         this.public_view_code = data.public_view_code;
         this.public_view_code_expires_at = new Date(data.public_view_code_expires_at);
         this.version = data.version;
-        this.details = data.details.map(d => new DocumentDetail(this, d));
+        this.details = data.details.map(d => new DocumentDetail(d));
         this.total_paid = parseFloat(data.total_paid);
         this.total_unpaid = parseFloat(data.total_unpaid);
         this.total_unpaid_base = parseFloat(data.total_unpaid_base);
@@ -202,52 +246,7 @@ export class SalesInvoice {
         this.payments = data.payments.map(p => new Payment(p));
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
-    }
-
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_pdf */
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_ubl */
-
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_packing_slip_pdf */
-
-    /**
-     * This endpoint provides two options: sending the invoice and scheduling sending in the future. When sending now, you can provide a send method, email address and message. If you don’t provide any arguments, the defaults from the contact and workflow will be used.
-     *
-     * When scheduling sending, set the boolean sending_scheduled to true and provide an invoice_date.
-     */
-    async send(options: SendSalesInvoiceOptions = {}) {
-        const {data} = await this.administration.client.rest.sendInvoice(this, options);
-        this.setData(data);
-        return this;
-    }
-
-    async registerPaymentCreditInvoice() {
-        const {data} = await this.administration.client.rest.registerPaymentCreditInvoice(this);
-        this.setData(data);
-        return this;
-    }
-
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_send_reminders */
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_pause */
-
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_resume */
-
-    /** */
-    async duplicateToCreditInvoice() {
-        const {data} = await this.administration.client.rest.duplicateToCreditInvoice(this);
-        return new SalesInvoice(this.administration, data);
-    }
-
-    async addPayment(options: AddPaymentOptions) {
-        const {data} = await this.administration.client.rest.addPayment(this, options)
-        const payment = new Payment(data)
-        this.payments.push(payment)
-        return payment;
-    }
-
-    async deletePayment(paymentId: string) {
-        await this.administration.client.rest.deletePayment(this, paymentId)
-        this.payments = this.payments.filter(p => p.id !== paymentId)
+        this.events = data.events.map(e => new Event(e));
     }
 
     /* todo: Mark dubious/uncollectible

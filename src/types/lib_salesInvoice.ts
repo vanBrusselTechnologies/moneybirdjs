@@ -12,7 +12,7 @@ export interface AddSalesInvoiceOptions {
     /** Should be a valid contact person id. */
     contact_person_id?: string,
     original_estimate_id?: string,
-    /** Default document style is used if value is not provided. Should be a valid document style id. */
+    /** The default document style is used if a value is not provided. Should be a valid document style id. */
     document_style_id?: string,
     /** If value is not provided, the workflow saved in the contact is used. If the contact doesn't have a default workflow, the administration’s default workflow is used. Should be a valid workflow id. */
     workflow_id?: string,
@@ -50,7 +50,6 @@ export interface AddSalesInvoiceDetailsAttribute {
     automated_tax_enabled?: boolean
 }
 
-
 export interface SendSalesInvoiceOptions {
     delivery_method?: "Email"|"Simplerinvoicing"|"Manual",
     sending_scheduled?: boolean,
@@ -68,7 +67,7 @@ export interface UpdateSalesInvoiceOptions {
     contact_person_id?: string,
     update_contact?: boolean,
     original_estimate_id?: string,
-    /** Default document style is used if value is not provided. Should be a valid document style id. */
+    /** The default document style is used if a value is not provided. Should be a valid document style id. */
     document_style_id?: string,
     /** If value is not provided, the workflow saved in the contact is used. If the contact doesn't have a default workflow, the administration’s default workflow is used. Should be a valid workflow id. */
     workflow_id?: string,

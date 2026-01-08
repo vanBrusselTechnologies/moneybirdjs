@@ -1,13 +1,6 @@
-import {
-    AddAttachmentOptions,
-    AddNoteOptions,
-    APIGeneralDocument,
-    UpdateGeneralDocumentOptions
-} from "../types";
-import {Administration, Attachment, Contact, Event, Note} from '.'
+import {Administration, Attachment, Contact, Event, Note} from "."
+import {AddAttachmentOptions, AddNoteOptions, APIGeneralDocument, UpdateGeneralDocumentOptions} from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class GeneralDocument {
     public id: string;
     public administration_id: string;
@@ -42,7 +35,7 @@ export class GeneralDocument {
         this.version = data.version;
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
+        this.events = data.events.map(e => new Event(e));
     }
 
     async update(options: UpdateGeneralDocumentOptions, removeContact?: boolean) {
@@ -93,6 +86,6 @@ export class GeneralDocument {
         this.version = data.version;
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
+        this.events = data.events.map(e => new Event(e));
     }
 }

@@ -1,8 +1,6 @@
+import {Administration, Attachment, DocumentDetail, Event, Note, Payment} from "."
 import {AddAttachmentOptions, AddNoteOptions, AddPaymentOptions, APIReceipt, UpdateReceiptOptions} from "../types";
-import {Administration, Attachment, DocumentDetail, Event, Note, Payment} from '.'
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class Receipt {
     public id: string;
     public administration_id: string;
@@ -55,11 +53,11 @@ export class Receipt {
         this.created_at = new Date(data.created_at);
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
-        this.details = data.details.map(d => new DocumentDetail(this, d));
+        this.details = data.details.map(d => new DocumentDetail(d));
         this.payments = data.payments.map(p => new Payment(p))
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
+        this.events = data.events.map(e => new Event(e));
     }
 
     async update(options: UpdateReceiptOptions) {
@@ -93,6 +91,18 @@ export class Receipt {
         this.attachments = this.attachments.filter(a => a.id !== attachmentId)
     }
 
+    async addPayment(options: AddPaymentOptions) {
+        const {data} = await this.administration.client.rest.addPayment(this, options)
+        const payment = new Payment(data)
+        this.payments.push(payment)
+        return payment;
+    }
+
+    async deletePayment(paymentId: string) {
+        await this.administration.client.rest.deletePayment(this, paymentId)
+        this.payments = this.payments.filter(p => p.id !== paymentId)
+    }
+
     private setData(data: APIReceipt) {
         this.id = data.id;
         this.administration_id = data.administration_id;
@@ -116,22 +126,10 @@ export class Receipt {
         this.created_at = new Date(data.created_at);
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
-        this.details = data.details.map(d => new DocumentDetail(this, d));
+        this.details = data.details.map(d => new DocumentDetail(d));
         this.payments = data.payments.map(p => new Payment(p))
         this.notes = data.notes.map(n => new Note(this, n));
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
-    }
-
-    async addPayment(options: AddPaymentOptions) {
-        const {data} = await this.administration.client.rest.addPayment(this, options)
-        const payment = new Payment(data)
-        this.payments.push(payment)
-        return payment;
-    }
-
-    async deletePayment(paymentId: string) {
-        await this.administration.client.rest.deletePayment(this, paymentId)
-        this.payments = this.payments.filter(p => p.id !== paymentId)
+        this.events = data.events.map(e => new Event(e));
     }
 }

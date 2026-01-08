@@ -1,8 +1,6 @@
+import {Administration} from ".";
 import {APIFinancialAccount} from "../types";
-import {Administration} from '.';
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class FinancialAccount {
     public id: string;
     public administration_id: string;

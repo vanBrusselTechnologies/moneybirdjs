@@ -1,8 +1,6 @@
+import {Administration, ContactCustomField, ContactPerson, CustomField, Event, Note} from ".";
 import {AddNoteOptions, APIContact, ContactPersonOptions, UpdateContactOptions} from "../types";
-import {Administration, Note, ContactPerson, CustomField, ContactCustomField, Event} from "../struct";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class Contact {
     public id: string;
     public administration_id: string;
@@ -52,7 +50,7 @@ export class Contact {
     public custom_fields: CustomField[];
     public contact_people: ContactPerson[];
     public archived: boolean;
-    public events: Event[]
+    public events: Event[];
 
     constructor(public administration: Administration, data: APIContact) {
         if (data.credit_card_type) console.log(`Contact.creditCardType: ${data.credit_card_type}`);
@@ -105,7 +103,52 @@ export class Contact {
         this.custom_fields = data.custom_fields.map(n => new ContactCustomField(this, n))
         this.contact_people = data.contact_people.map(n => new ContactPerson(this, n))
         this.archived = data.archived;
-        this.events = data.events ? data.events.map(n => new Event(this, n)) : []
+        this.events = (data.events ?? []).map(e => new Event(e))
+    }
+
+    /** Updates this contact. */
+    async update(options: UpdateContactOptions) {
+        const {data} = await this.administration.client.rest.updateContact(this, options)
+        this.setData(data)
+        return this;
+    }
+
+    /** Deletes this contact or archives it when deleting was not possible. */
+    async delete() {
+        await this.administration.deleteContact(this.id)
+    }
+
+    async addNote(options: AddNoteOptions) {
+        const {data} = await this.administration.client.rest.addNote(this, options)
+        const note = new Note(this, data)
+        this.notes.push(note)
+        return note;
+    }
+
+    // todo https://developer.moneybird.com/api/contacts/#patch_contacts_id_archive
+    // todo async addAdditionalCharges
+    // todo async getAdditionalCharges
+
+    async deleteNote(noteId: string) {
+        await this.administration.client.rest.deleteNote(this, noteId)
+        this.notes = this.notes.filter(n => n.id !== noteId)
+    }
+
+    async getContactPerson(contactPersonId: string) {
+        const {data} = await this.administration.client.rest.getContactPerson(this, contactPersonId)
+        return new ContactPerson(this, data);
+    }
+
+    async addContactPerson(options: ContactPersonOptions) {
+        const {data} = await this.administration.client.rest.addContactPerson(this, options)
+        const contactPerson = new ContactPerson(this, data)
+        this.contact_people.push(contactPerson)
+        return contactPerson;
+    }
+
+    async deleteContactPerson(contactPersonId: string) {
+        await this.administration.client.rest.deleteContactPerson(this, contactPersonId)
+        this.contact_people = this.contact_people.filter(p => p.id !== contactPersonId)
     }
 
     private setData(data: APIContact) {
@@ -158,52 +201,7 @@ export class Contact {
         this.custom_fields = data.custom_fields.map(n => new ContactCustomField(this, n))
         this.contact_people = data.contact_people.map(n => new ContactPerson(this, n))
         this.archived = data.archived;
-        this.events = data.events.map(n => new Event(this, n))
-    }
-
-    /** Updates this contact. */
-    async update(options: UpdateContactOptions) {
-        const {data} = await this.administration.client.rest.updateContact(this, options)
-        this.setData(data)
-        return this;
-    }
-
-    /** Deletes this contact, or archives it when deleting was not possible. */
-    async delete() {
-        await this.administration.deleteContact(this.id)
-    }
-
-    // todo https://developer.moneybird.com/api/contacts/#patch_contacts_id_archive
-    // todo async addAdditionalCharges
-    // todo async getAdditionalCharges
-
-    async addNote(options: AddNoteOptions) {
-        const {data} = await this.administration.client.rest.addNote(this, options)
-        const note = new Note(this, data)
-        this.notes.push(note)
-        return note;
-    }
-
-    async deleteNote(noteId: string) {
-        await this.administration.client.rest.deleteNote(this, noteId)
-        this.notes = this.notes.filter(n => n.id !== noteId)
-    }
-
-    async getContactPerson(contactPersonId: string) {
-        const {data} = await this.administration.client.rest.getContactPerson(this, contactPersonId)
-        return new ContactPerson(this, data);
-    }
-
-    async addContactPerson(options: ContactPersonOptions) {
-        const {data} = await this.administration.client.rest.addContactPerson(this, options)
-        const contactPerson = new ContactPerson(this, data)
-        this.contact_people.push(contactPerson)
-        return contactPerson;
-    }
-
-    async deleteContactPerson(contactPersonId: string) {
-        await this.administration.client.rest.deleteContactPerson(this, contactPersonId)
-        this.contact_people = this.contact_people.filter(p => p.id !== contactPersonId)
+        this.events = data.events.map(e => new Event(e))
     }
 
     // todo async getMoneybirdPaymentsMandate

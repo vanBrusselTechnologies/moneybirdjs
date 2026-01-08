@@ -1,7 +1,5 @@
 import {APIPayment} from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class Payment {
     id: string;
     administration_id: string;

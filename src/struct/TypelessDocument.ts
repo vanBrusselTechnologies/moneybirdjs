@@ -1,9 +1,8 @@
+import {Administration, Event, Attachment} from "."
 import {AddAttachmentOptions, APITypelessDocument} from "../types";
-import {Administration, Event, Attachment} from '.'
 
-// noinspection JSUnusedGlobalSymbols
 /**
- * Typeless documents are documents of which the type is not yet known. For example, a document uploaded via email or via the bulk uploader. It is not possible to update a typeless document, except for adding attachments. You will need to set its type first. You cannot set the type of typeless documents using the API yet, but you can do it via the website.
+ * Typeless documents are documents of which the type is not yet known. For example, a document that is uploaded via email or via the bulk uploader. It is not possible to update a typeless document, except for adding attachments. You will need to set its type first. You cannot set the type of typeless documents using the API yet, but you can do it via the website.
  */
 export class TypelessDocument {
     public id: string;
@@ -31,7 +30,7 @@ export class TypelessDocument {
         this.updated_at = new Date(data.updated_at);
         this.version = data.version;
         this.attachments = data.attachments.map(a => new Attachment(this, a));
-        this.events = data.events.map(e => new Event(this, e));
+        this.events = data.events.map(e => new Event(e));
     }
 
     async delete(refresh_journal_entries?: boolean) {

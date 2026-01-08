@@ -1,4 +1,3 @@
-import {Entity, EntityType, Filter, UrlOptions} from "../types";
 import {
     Contact,
     ExternalSalesInvoice,
@@ -10,14 +9,15 @@ import {
     SalesInvoice,
     TypelessDocument
 } from "../struct";
+import {Entity, EntityType, Filter} from "../types";
 
 /** Contains various general-purpose utility methods. */
 export class Util extends null {
     /** Returns a string containing a query string suitable for use in a URL. */
-    public static queryString(options: UrlOptions): string {
-        const entries = Object.entries(options).map(e => e[0] === 'filter' || e[0] === 'new_filter' ? [e[0], this.encodeFilterString(e[1])] : e)
+    public static queryString(options: Object): string {
+        const entries = Object.entries(options).filter(e => e[0] !== undefined).map(e => e[0] === 'filter' || e[0] === 'new_filter' ? [e[0], this.encodeFilterString(e[1])] : e)
         const query = new URLSearchParams(entries).toString();
-        return query.length ? `?${query}` : query;
+        return query.length > 0 ? `?${query}` : query;
     }
 
     /** Returns a string containing a filter string suitable for use in a URL query string. */

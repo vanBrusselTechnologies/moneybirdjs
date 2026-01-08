@@ -6,8 +6,6 @@ import {
     UpdateLedgerAccountOptions
 } from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class LedgerAccount {
     id: string;
     administration_id: string;
@@ -18,7 +16,7 @@ export class LedgerAccount {
     updated_at: Date;
     parent_id: string | null;
     allowed_document_types: APILedgerAccountAllowedDocumentTypes[];
-    description?: string
+    description?: string;
 
     constructor(public administration: Administration, data: APILedgerAccount) {
         this.id = data.id;

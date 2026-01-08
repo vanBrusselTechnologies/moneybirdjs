@@ -1,12 +1,11 @@
+import {Administration, Payment} from "."
 import {
-    APIFinancialMutation, APIFinancialMutationSepaFields,
+    APIFinancialMutation,
+    APIFinancialMutationSepaFields,
     FinancialMutationLinkBookingOptions,
     FinancialMutationUnlinkBookingOptions
 } from "../types";
-import {Administration, Payment} from '.'
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class FinancialMutation {
     public id: string;
     public administration_id: string;
@@ -59,7 +58,7 @@ export class FinancialMutation {
         //this.ledger_account_bookings = data.ledger_account_bookings.(l => new LedgerAccountBooking(this, l));
     }
 
-    /** Linking a booking to a financial mutations allows you to process financial mutations. Financial mutations can be linked to invoices, documents, ledger accounts and payment batches. */
+    /** Linking a booking to a financial mutation allows you to process financial mutations. Financial mutations can be linked to invoices, documents, ledger accounts, and payment batches. */
     async linkBooking(options: FinancialMutationLinkBookingOptions) {
         await this.administration.client.rest.financialMutationLinkBooking(this, options);
     }

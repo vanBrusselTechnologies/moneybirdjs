@@ -1,8 +1,6 @@
+import {Contact} from ".";
 import {APIContactPerson, ContactPersonOptions} from "../types";
-import {Contact} from "../struct";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class ContactPerson {
     public id: string;
     public administration_id: string;

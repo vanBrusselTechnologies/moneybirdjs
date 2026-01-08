@@ -19,6 +19,7 @@ A wrapper for the Moneybird API
 - Financial Mutations
 - Ledger Accounts
 - Payments
+- Reports
 - Sales Invoices*
 - Tax rates
 - Users

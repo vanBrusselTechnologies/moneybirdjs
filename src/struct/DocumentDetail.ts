@@ -1,7 +1,5 @@
-import {APIDocumentDetail, Entity} from "../types";
+import {APIDocumentDetail, Period} from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class DocumentDetail {
     public id: string;
     public administration_id: string;
@@ -13,16 +11,16 @@ export class DocumentDetail {
     public amount_decimal: number;
     public description: string;
     public price: number;
-    public period: string | null;
+    public period: Period | null;
     public row_order: number;
     public total_price_excl_tax_with_discount: number;
     public total_price_excl_tax_with_discount_base: number;
     public tax_report_reference: string[];
     public mandatory_tax_text: string | null;
     public created_at: Date;
-    public updated_at: Date
+    public updated_at: Date;
 
-    constructor(public entity: Entity, data: APIDocumentDetail) {
+    constructor(data: APIDocumentDetail) {
         this.id = data.id;
         this.administration_id = data.administration_id;
         this.tax_rate_id = data.tax_rate_id;

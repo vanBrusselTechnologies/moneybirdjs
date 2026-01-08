@@ -1,7 +1,5 @@
 import {APIAttachment, Document} from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class Attachment {
     id: string;
     administration_id: string;

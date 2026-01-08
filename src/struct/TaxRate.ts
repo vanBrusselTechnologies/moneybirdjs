@@ -1,7 +1,5 @@
-import {Administration, APITaxRate} from "../types";
+import {APITaxRate} from "../types";
 
-// noinspection JSUnusedGlobalSymbols
-/** */
 export class TaxRate {
     id: string;
     administration_id: string;
@@ -14,7 +12,7 @@ export class TaxRate {
     created_at: Date;
     updated_at: Date;
 
-    constructor(public administration: Administration, data: APITaxRate) {
+    constructor(data: APITaxRate) {
         this.id = data.id;
         this.administration_id = data.administration_id;
         this.name = data.name;
