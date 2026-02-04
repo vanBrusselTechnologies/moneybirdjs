@@ -1,51 +1,52 @@
 import {Contact} from ".";
-import {APIContactPerson, ContactPersonOptions} from "../types";
+import {APIContactPerson, Identifier, UpdateContactPersonOptions} from "../types";
 
 export class ContactPerson {
-    public id: string;
-    public administration_id: string;
-    public firstname: string;
-    public lastname: string;
-    public phone: null | string;
-    public email: null | string;
-    public department: null | string;
-    public created_at: Date;
-    public updated_at: Date;
-    public version: number;
+    public id!: Identifier;
+    public contact_id!: Identifier;
+    public administration_id!: Identifier;
+    public firstname!: string;
+    public lastname!: string;
+    public phone?: string;
+    public email?: string;
+    public department?: string;
+    public created_at!: Date;
+    public updated_at!: Date;
+    public version!: number;
 
     constructor(public contact: Contact, data: APIContactPerson) {
-        this.id = data.id;
-        this.administration_id = data.administration_id;
-        this.firstname = data.firstname;
-        this.lastname = data.lastname;
-        this.phone = data.phone;
-        this.email = data.email;
-        this.department = data.department;
-        this.created_at = new Date(data.created_at);
-        this.updated_at = new Date(data.updated_at);
-        this.version = data.version;
+        this.setData(data)
     }
 
-    private setData(data: APIContactPerson) {
-        this.id = data.id;
-        this.administration_id = data.administration_id;
-        this.firstname = data.firstname;
-        this.lastname = data.lastname;
-        this.phone = data.phone;
-        this.email = data.email;
-        this.department = data.department;
-        this.created_at = new Date(data.created_at);
-        this.updated_at = new Date(data.updated_at);
-        this.version = data.version;
+    /**
+     * Deletes a contact person.
+     * @see https://developer.moneybird.com/api/contacts#delete-a-contact-person
+     */
+    async delete() {
+        await this.contact.deleteContactPerson(this.id)
     }
 
-    async update(options: ContactPersonOptions) {
+    /**
+     * When updating a contact, you only need to provide the information you want to change. Attributes you don't provide in the request will not be updated.
+     * @see https://developer.moneybird.com/api/contacts#update-a-contact-person
+     */
+    async update(options: UpdateContactPersonOptions) {
         const {data} = await this.contact.administration.client.rest.updateContactPerson(this, options)
         this.setData(data)
         return this;
     }
 
-    async delete() {
-        await this.contact.deleteContactPerson(this.id)
+    private setData(data: APIContactPerson) {
+        this.id = data.id;
+        this.contact_id = data.contact_id;
+        this.administration_id = data.administration_id;
+        this.firstname = data.firstname;
+        this.lastname = data.lastname;
+        if (data.phone) this.phone = data.phone;
+        if (data.email) this.email = data.email;
+        if (data.department) this.department = data.department;
+        this.created_at = new Date(data.created_at);
+        this.updated_at = new Date(data.updated_at);
+        this.version = data.version;
     }
 }

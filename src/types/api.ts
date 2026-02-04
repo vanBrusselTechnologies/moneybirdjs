@@ -1,4 +1,14 @@
-import {CustomFieldSource, Identifier, Period} from "./lib";
+import {
+    CreditCardType,
+    CustomFieldSource,
+    DeliveryMethod,
+    Identifier,
+    NoteEntityType,
+    Period,
+    SepaSequenceType,
+    SiIdentifierType,
+    ToDoType
+} from "./lib";
 
 export interface APIAdministration {
     id: Identifier
@@ -17,46 +27,83 @@ export interface APIAdministration {
     period_locked_until: string | null;
 }
 
+export interface APICustomField {
+    id: Identifier
+    administration_id: Identifier
+    name: string
+    source: CustomFieldSource
+}
+
+export interface APIEvent {
+    administration_id: Identifier
+    user_id: Identifier
+    action: string
+    link_entity_id: Identifier | null
+    link_entity_type: string | null
+    data: { [key: string]: string }
+    created_at: string
+    updated_at: string
+}
+
+export interface APINote {
+    id: Identifier
+    administration_id: Identifier
+    entity_id: Identifier | null
+    entity_type: NoteEntityType
+    user_id: Identifier
+    assignee_id: Identifier | null
+    todo: boolean
+    note: string | null
+    completed_at: string | null
+    completed_by_id: Identifier | null
+    todo_type: ToDoType | null
+    data: { [key: string]: string }
+    created_at: string
+    updated_at: string
+}
+
 export interface APIContact {
-    id: string
-    administration_id: string
+    id: Identifier
+    administration_id: Identifier
     company_name: string
-    firstname: string
-    lastname: string
-    address1: string
-    address2: string
-    zipcode: string
-    city: string
+    firstname: string | null
+    lastname: string | null
+    address1: string | null
+    address2: string | null
+    zipcode: string | null
+    city: string | null
     country: string
-    phone: string
-    delivery_method: string
+    phone: string | null
+    delivery_method: DeliveryMethod
     customer_id: string
-    tax_number: string
-    chamber_of_commerce: string
-    bank_account: string
-    attention: string
-    email: string
+    tax_number: string | null
+    chamber_of_commerce: string | null
+    bank_account: string | null
+    is_trusted: boolean
+    max_transfer_amount: number | null
+    attention: string | null
+    email: string | null
     email_ubl: boolean
-    send_invoices_to_attention: string
-    send_invoices_to_email: string
-    send_estimates_to_attention: string
-    send_estimates_to_email: string
-    sepa_active: boolean
-    sepa_iban: string
-    sepa_iban_account_name: string
-    sepa_bic: string
-    sepa_mandate_id: string
+    send_invoices_to_attention: string | null
+    send_invoices_to_email: string | null
+    send_estimates_to_attention: string | null
+    send_estimates_to_email: string | null
+    sepa_active: boolean | null
+    sepa_iban: string | null
+    sepa_iban_account_name: string | null
+    sepa_bic: string | null
+    sepa_mandate_id: string | null
     sepa_mandate_date: string | null
-    sepa_sequence_type: string
-    credit_card_number: string
-    credit_card_reference: string
-    credit_card_type: null
+    sepa_sequence_type: SepaSequenceType
+    credit_card_number: string | null
+    credit_card_reference: string | null
+    credit_card_type: CreditCardType | null
     tax_number_validated_at: string | null
     tax_number_valid: boolean | null
-    invoice_workflow_id: string | null
-    estimate_workflow_id: string | null
-    si_identifier: string
-    si_identifier_type: string | null
+    invoice_workflow_id: Identifier | null
+    estimate_workflow_id: Identifier | null
+    si_identifier: string | null
+    si_identifier_type: SiIdentifierType | null
     moneybird_payments_mandate: boolean
     created_at: string
     updated_at: string
@@ -69,58 +116,50 @@ export interface APIContact {
     events: APIEvent[]
 }
 
-export interface APINote {
-    id: string
-    administration_id: string
-    entity_id: string
-    entity_type: string | "Contact"
-    user_id: string
-    assignee_id: string
-    todo: boolean
-    note: string
-    completed_at: null | string
-    completed_by_id: null | string
-    todo_type: null | string
-    data: { [key: string]: string }
-    created_at: string
-    updated_at: string
-}
-
-export interface APICustomField {
-    id: string
-    administration_id: string
-    name: string
-    source: CustomFieldSource
-}
-
 export interface APIContactCustomField {
-    id: string
+    id: Identifier
     name: string
     value: string
 }
 
 export interface APIContactPerson {
-    id: string
-    administration_id: string
+    id: Identifier
+    contact_id: Identifier
+    administration_id: Identifier
     firstname: string
     lastname: string
-    phone: null | string
-    email: null | string
-    department: null | string
+    phone: string | null
+    email: string | null
+    department: string | null
     created_at: string
     updated_at: string
     version: number
 }
 
-export interface APIEvent {
-    administration_id: string
-    user_id: string
-    action: string
-    link_entity_id: null
-    link_entity_type: null
-    data: { [key: string]: string }
+export interface APIPaymentsMandate {
+    type: string | null
+    sepa_mandate: boolean
+    bank: string | null
+    iban: string | null
+    bic: string | null
+    iban_account_name: string | null
+    card_expiry_month: string | null
+    card_expiry_year: string | null
+    card_final_digits: string | null
     created_at: string
-    updated_at: string
+}
+
+export interface APIAdditionalCharge {
+    id: Identifier
+    administration_id: Identifier
+    contact_id: Identifier | null
+    subscription_id: Identifier | null
+    product_id: Identifier
+    detail_id: Identifier | null
+    amount: string | null
+    price: string
+    period: Period
+    description: string
 }
 
 export interface APIDocumentStyle {
@@ -656,18 +695,18 @@ export interface APIRecurringSalesInvoice {
 }
 
 export interface APISalesInvoice {
-    id: string
-    administration_id: string
-    contact_id: string
+    id: Identifier
+    administration_id: Identifier
+    contact_id: Identifier
     contact: APIContact
-    contact_person_id: string | null
+    contact_person_id: Identifier | null
     contact_person: APIContactPerson | null
-    invoice_id: string
-    recurring_sales_invoice_id: string | null
-    workflow_id: string
-    document_style_id: string
-    identity_id: string
-    draft_id: string | null
+    invoice_id: Identifier
+    recurring_sales_invoice_id: Identifier | null
+    workflow_id: Identifier
+    document_style_id: Identifier
+    identity_id: Identifier
+    draft_id: Identifier | null
     state: string
     invoice_date: string
     due_date: string | null
@@ -713,12 +752,12 @@ export interface APISalesInvoice {
 }
 
 export interface APIInvoiceCustomField {
-    id: string
+    id: Identifier
     name: string
     value: string
 }
 
-//todo: APISubscription
+// TODO: APISubscription
 export interface APISubscription {
 }
 
@@ -735,7 +774,7 @@ export interface APITaxRate {
     updated_at: string
 }
 
-//todo: APITimeEntry
+// TODO: APITimeEntry
 export interface APITimeEntry {
 }
 
@@ -792,6 +831,8 @@ export interface APIWorkflow {
     updated_at: string
 }
 
+//#region Reports
+/** */
 export interface APIReportAsset {
     asset_id: Identifier
     ledger_account_id: Identifier
@@ -851,12 +892,26 @@ export interface APICreditorsReport {
     creditors: APIReportContact[]
 }
 
+export interface APIDebtorsAgingReport {
+    debtors: APIReportAgingContact[]
+}
+
 export interface APIDebtorsReport {
     debtors: APIReportContact[]
 }
 
 export interface APIExpensesByContactReport {
     expenses_by_contact: APIReportContact[]
+}
+
+export interface APIReportAgingBucket {
+    /** The aging bucket name, e.g. '< 30 days', '30-60 days', '60+ days' */
+    name: string
+    amount: string
+}
+
+export interface APIReportAgingContact extends APIReportContact {
+    aging_buckets: APIReportAgingBucket[]
 }
 
 export interface APIReportContact {
@@ -945,3 +1000,5 @@ export interface APIReportTaxRate {
     type: string
     tax: string
 }
+
+//#endregion Reports

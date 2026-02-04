@@ -40,7 +40,7 @@ export class ExternalSalesInvoice {
     public attachments: Attachment[];
     public events: Event[];
 
-    //todo public tax_totals: TaxTotals[];
+    // TODO: public tax_totals: TaxTotals[];
 
     constructor(public administration: Administration, data: APIExternalSalesInvoice) {
         this.id = data.id;
@@ -153,7 +153,7 @@ export class ExternalSalesInvoice {
         this.events = data.events.map(e => new Event(e));
     }
 
-    /* todo: Mark dubious/uncollectible
+    /* TODO: Mark dubious/uncollectible
     async markDubious(){
     }
 

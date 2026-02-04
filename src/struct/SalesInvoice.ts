@@ -3,14 +3,14 @@ import {
     AddAttachmentOptions,
     AddNoteOptions,
     AddPaymentOptions,
-    APISalesInvoice,
+    APISalesInvoice, Identifier,
     SendSalesInvoiceOptions,
     UpdateSalesInvoiceOptions
 } from "../types";
 
 export class SalesInvoice {
     public id: string;
-    public administration_id: string;
+    public administration_id: Identifier;
     public contact_id: string;
     //public contact: Contact;
     public contact_person_id: string | null;
@@ -161,10 +161,10 @@ export class SalesInvoice {
         return this;
     }
 
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_pdf */
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_ubl */
+    /* TODO: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_pdf */
+    /* TODO: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_ubl */
 
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_packing_slip_pdf */
+    /* TODO: https://developer.moneybird.com/api/sales_invoices/#get_sales_invoices_id_download_packing_slip_pdf */
 
     async registerPaymentCreditInvoice() {
         const {data} = await this.administration.client.rest.registerPaymentCreditInvoice(this);
@@ -178,10 +178,10 @@ export class SalesInvoice {
         return new SalesInvoice(this.administration, data);
     }
 
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_send_reminders */
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_pause */
+    /* TODO: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_send_reminders */
+    /* TODO: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_pause */
 
-    /* todo: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_resume */
+    /* TODO: https://developer.moneybird.com/api/sales_invoices/#post_sales_invoices_id_resume */
 
     async addPayment(options: AddPaymentOptions) {
         const {data} = await this.administration.client.rest.addPayment(this, options)
@@ -249,7 +249,7 @@ export class SalesInvoice {
         this.events = data.events.map(e => new Event(e));
     }
 
-    /* todo: Mark dubious/uncollectible
+    /* TODO: Mark dubious/uncollectible
     async markDubious(){
     }
 

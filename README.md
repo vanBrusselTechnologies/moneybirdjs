@@ -5,7 +5,7 @@ A wrapper for the Moneybird API
 ## Supported endpoints
 
 - Administration
-- Contacts*
+- Contacts
 - Custom Fields
 - Document Styles
 - Documents

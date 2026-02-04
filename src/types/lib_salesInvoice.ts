@@ -1,4 +1,4 @@
-import {Filter} from "./lib";
+import {Filter, Identifier} from "./lib";
 
 export interface SalesInvoiceSearchOptions {
     page?: number,
@@ -26,7 +26,7 @@ export interface AddSalesInvoiceOptions {
     payment_conditions?: string,
     discount?: number,
     details_attributes?: AddSalesInvoiceDetailsAttribute[],
-    custom_fields_attributes?: { [index: number]: { "id": number, "value": string } },
+    custom_fields_attributes?: { id: Identifier, value: string }[],
     from_checkout?: boolean
 }
 
@@ -82,7 +82,7 @@ export interface UpdateSalesInvoiceOptions {
     payment_conditions?: string,
     discount?: number,
     details_attributes: UpdateSalesInvoiceDetailsAttribute[],
-    custom_fields_attributes?: { [index: number]: { "id": number, "value": string } }
+    custom_fields_attributes?: { id: Identifier, value: string }[]
 }
 
 export interface UpdateSalesInvoiceDetailsAttribute {

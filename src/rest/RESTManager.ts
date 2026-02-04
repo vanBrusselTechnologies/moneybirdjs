@@ -12,11 +12,14 @@ import {
     SalesInvoice
 } from "../struct";
 import {
+    AddAdditionalChargeOptions,
     AddAttachmentOptions,
     AddContactOptions,
+    AddContactPersonOptions,
     AddLedgerAccountOptions,
     AddNoteOptions,
     AddPaymentOptions,
+    APIAdditionalCharge,
     APIAdministration,
     APIBalanceSheetReport,
     APICashFlowReport,
@@ -24,6 +27,7 @@ import {
     APIContactPerson,
     APICreditorsReport,
     APICustomField,
+    APIDebtorsAgingReport,
     APIDebtorsReport,
     APIDocument,
     APIDocumentStyle,
@@ -35,6 +39,7 @@ import {
     APILedgerAccount,
     APINote,
     APIPayment,
+    APIPaymentsMandate,
     APIProfitLossReport,
     APIReportAsset,
     APIReportJournalEntry,
@@ -48,7 +53,8 @@ import {
     APIVerifications,
     APIWorkflow,
     CashFlowReportOptions,
-    ContactPersonOptions,
+    ContactFilterOptions,
+    ContactListIdsOptions,
     ContactSearchOptions,
     Document,
     DocumentAddOptions,
@@ -59,13 +65,18 @@ import {
     Filter,
     FinancialMutationLinkBookingOptions,
     FinancialMutationUnlinkBookingOptions,
+    Identifier,
     JournalEntriesReportOptions,
+    PagedAgingReportOptions,
     PagedReportOptions,
     ProfitLossReportOptions,
     ReportOptions,
+    RequestPaymentsMandateEmailOptions,
+    RequestPaymentsMandateOptions,
     SendSalesInvoiceOptions,
     TaxRateSearchOptions,
     UpdateContactOptions,
+    UpdateContactPersonOptions,
     UpdateLedgerAccountOptions,
     UserSearchOptions
 } from "../types";
@@ -103,10 +114,7 @@ export class RESTManager {
 
     public deleteAttachment(doc: Document, attachmentId: string) {
         const docPath = Util.entityRestUrl(Util.entityToEntityType(doc));
-        return this.requestHandler.request<void>(`${doc.administration_id}/${docPath}/${doc.id}/attachments/${attachmentId}${format}`, {
-            method: "DELETE",
-            body: "{}"
-        })
+        return this.requestHandler.request<void>(`${doc.administration_id}/${docPath}/${doc.id}/attachments/${attachmentId}${format}`, {method: "DELETE"})
     }
 
     public downloadAttachment(doc: Document, attachmentId: string) {
@@ -120,38 +128,182 @@ export class RESTManager {
         const entityPath = Util.entityRestUrl(entityType);
         const query = filter === undefined ? '' : Util.queryString({filter: filter});
         return this.requestHandler.request<{
-            id: string,
+            id: Identifier,
             version: number
         }[]>(`${administration.id}/${entityPath}/synchronization${format}${query}`, {method: "GET"})
     }
 
-    public listContactsByIds(administration: Administration, ids: Array<string>) {
+//#region Contacts
+    /**
+     * Returns all information about a contact by the given customer id
+     * @see https://developer.moneybird.com/api/contacts#get-contact-by-customer-id
+     */
+    public getContactByCustomerId(administration: Administration, customerId: string) {
+        return this.requestHandler.request<APIContact>(`${administration.id}/contacts/customer_id/${customerId}${format}`, {method: "GET"})
+    }
+
+    /**
+     * Returns a paginated list of all contacts in the administration.
+     * The {@link ContactFilterOptions.filter} argument allows you to filter the list of contacts.
+     * @see https://developer.moneybird.com/api/contacts#filter-contacts
+     */
+    public filterContacts(administration: Administration, options: ContactFilterOptions = {}) {
+        const query = Util.queryString(options);
+        return this.requestHandler.request<APIContact[]>(`${administration.id}/contacts/filter${format}${query}`, {method: "GET"})
+    }
+
+    /**
+     * Returns all contacts in the administration. The list contains the contact id and the version of the contact. Check if the version of the contact is newer than the version you have stored locally, use {@link getContactsByIds} for fetching contacts with the given ids.
+     * @see https://developer.moneybird.com/api/contacts#list-all-ids-and-versions
+     */
+    public listContactIdsAndVersions(administration: Administration, options: ContactListIdsOptions = {}) {
+        const query = Util.queryString(options);
+        return this.requestHandler.request<{
+            id: Identifier,
+            version: number
+        }[]>(`${administration.id}/contacts/synchronization${format}${query}`, {method: "GET"})
+    }
+
+    /**
+     * Given a list of contact ids, returns the contact information belonging to the contacts. Returns a maximum of 100 contacts, even if more ids are provided.
+     * @see https://developer.moneybird.com/api/contacts#fetch-contacts-with-given-ids
+     */
+    public getContactsByIds(administration: Administration, ids: Array<Identifier>) {
         return this.requestHandler.request<APIContact[]>(`${administration.id}/contacts/synchronization${format}`, {
             method: "POST",
             body: JSON.stringify({ids: ids})
         })
     }
 
-    public getContacts(administration: Administration, urlOptions: ContactSearchOptions) {
-        const query = Util.queryString(urlOptions);
-        return this.requestHandler.request<APIContact[]>(`${administration.id}/contacts${format}${query}`, {method: "GET"})
+    /**
+     * Returns all information about a contact person.
+     * @see https://developer.moneybird.com/api/contacts#get-contact-person
+     */
+    public getContactPerson(contact: Contact, contactPersonId: string) {
+        return this.requestHandler.request<APIContactPerson>(`${contact.administration_id}/contacts/${contact.id}/contact_people/${contactPersonId}${format}`, {method: "GET"})
     }
 
-    public getContact(administration: Administration, id: string) {
-        return this.requestHandler.request<APIContact>(`${administration.id}/contacts/${id}${format}`, {method: "GET"})
+    /**
+     * Deletes a contact person.
+     * @see https://developer.moneybird.com/api/contacts#delete-a-contact-person
+     */
+    public deleteContactPerson(contact: Contact, contactPersonId: string) {
+        return this.requestHandler.request<void>(`${contact.administration.id}/contacts/${contact.id}/contact_people/${contactPersonId}${format}`, {method: "DELETE"})
     }
 
-    public getContactByCustomerId(administration: Administration, customerId: string) {
-        return this.requestHandler.request<APIContact>(`${administration.id}/contacts/customer_id/${customerId}${format}`, {method: "GET"})
-    }
-
-    public addContact(administration: Administration, options: AddContactOptions) {
-        return this.requestHandler.request<APIContact>(`${administration.id}/contacts${format}`, {
-            method: "POST",
-            body: JSON.stringify({contact: options})
+    /**
+     * When updating a contact, you only need to provide the information you want to change. Attributes you don't provide in the request will not be updated.
+     * @see https://developer.moneybird.com/api/contacts#update-a-contact-person
+     */
+    public updateContactPerson(contactPerson: ContactPerson, options: UpdateContactPersonOptions) {
+        return this.requestHandler.request<APIContactPerson>(`${contactPerson.administration_id}/contacts/${contactPerson.contact.id}/contact_people/${contactPerson.id}${format}`, {
+            method: "PATCH",
+            body: JSON.stringify({contact_person: options})
         })
     }
 
+    /**
+     * Creating a new contact person in the administration requires at least a `contact_person` hash including `firstname` and `lastname`.
+     * @see https://developer.moneybird.com/api/contacts#create-a-new-contact-person
+     */
+    public addContactPerson(contact: Contact, options: AddContactPersonOptions) {
+        return this.requestHandler.request<APIContactPerson>(`${contact.administration_id}/contacts/${contact.id}/contact_people${format}`, {
+            method: "POST",
+            body: JSON.stringify({contact_person: options})
+        })
+    }
+
+    /**
+     * Obtains a URL for setting up a Moneybird Payments mandate. You must provide this URL to your contact to set up the mandate. Your contact is required to make a 15-cent payment. Every generated URL using this endpoint is valid for 14 days after creation. Only available when Moneybird Payments is enabled for the administration.
+     * @see https://developer.moneybird.com/api/contacts#request-an-url-for-setting-up-a-moneybird-payments-mandate
+     */
+    public requestMoneybirdPaymentsMandateSettingUpURL(contact: Contact, options: RequestPaymentsMandateOptions) {
+        return this.requestHandler.request<{
+            url: string
+        }>(`${contact.administration_id}/contacts/${contact.id}/moneybird_payments_mandate/url${format}`, {
+            method: "POST",
+            body: JSON.stringify({mandate_request: options})
+        })
+    }
+
+    /**
+     * Returns information about the stored Moneybird Payments mandate. Only available when Moneybird Payments is enabled for the administration.
+     * @see https://developer.moneybird.com/api/contacts#get-moneybird-payments-mandate
+     */
+    public getMoneybirdPaymentsMandate(contact: Contact) {
+        return this.requestHandler.request<APIPaymentsMandate>(`${contact.administration_id}/contacts/${contact.id}/moneybird_payments_mandate${format}`, {method: "GET"})
+    }
+
+    /**
+     * Sends a request for a Moneybird Payments mandate to a contact via e-mail. Your contact will receive an email containing a link to authorize direct debit payments through Moneybird Payments. Your contact is required to make a 15-cent payment. Only available when Moneybird Payments is enabled for the administration.
+     * @see https://developer.moneybird.com/api/contacts#request-a-new-moneybird-payments-mandate
+     */
+    public requestNewMoneybirdPaymentsMandate(contact: Contact, options: RequestPaymentsMandateEmailOptions) {
+        return this.requestHandler.request<void>(`${contact.administration_id}/contacts/${contact.id}/moneybird_payments_mandate${format}`, {
+            method: "POST",
+            body: JSON.stringify({mandate_request: options})
+        })
+    }
+
+    /**
+     * Deletes the stored Moneybird Payments mandate for the contact. Only available when Moneybird Payments is enabled for the administration.
+     * @see https://developer.moneybird.com/api/contacts#delete-a-stored-moneybird-payments-mandate
+     */
+    public deleteMoneybirdPaymentsMandate(contact: Contact) {
+        return this.requestHandler.request<void>(`${contact.administration_id}/contacts/${contact.id}/moneybird_payments_mandate${format}`, {method: "DELETE"})
+    }
+
+    /**
+     * Get the additional charges of the given contact.
+     * @see https://developer.moneybird.com/api/contacts#get-additional-charges
+     * @param contact
+     * @param include_billed If true, includes the additional charges that have already been billed. Default is false.
+     */
+    public getAdditionalCharges(contact: Contact, include_billed?: boolean) {
+        const query = include_billed == null ? '' : `?include_billed=${include_billed}`;
+        return this.requestHandler.request<APIAdditionalCharge[]>(`${contact.administration_id}/contacts/${contact.id}/additional_charges${format}${query}`, {method: "GET"})
+    }
+
+    /**
+     * At the end of the current period, the additional charges for a contact are merged where possible and an invoice will be created for them. The invoice will be scheduled for sending at the first day of the next month.
+     * @see https://developer.moneybird.com/api/contacts#create-an-additional-charge-to-be-invoiced-at-start-of-next-period
+     */
+    public addAdditionalCharge(contact: Contact, options: AddAdditionalChargeOptions) {
+        return this.requestHandler.request<APIAdditionalCharge>(`${contact.administration_id}/contacts/${contact.id}/additional_charges${format}`, {
+            method: "POST",
+            body: JSON.stringify(options)
+        })
+    }
+
+    /**
+     * Archives a contact.
+     * @see https://developer.moneybird.com/api/contacts#archive-a-contact
+     */
+    public archiveContact(contact: Contact) {
+        return this.requestHandler.request<void>(`${contact.administration_id}/contacts/${contact.id}/archive${format}`, {method: "PATCH"})
+    }
+
+    /**
+     * Returns all information about a contact.
+     * @see https://developer.moneybird.com/api/contacts#get-contact
+     */
+    public getContact(administration: Administration, id: Identifier, include_archived?: boolean) {
+        const query = include_archived == null ? '' : `?include_archived=${include_archived}`;
+        return this.requestHandler.request<APIContact>(`${administration.id}/contacts/${id}${format}${query}`, {method: "GET"})
+    }
+
+    /**
+     * Deletes a contact.
+     * @see https://developer.moneybird.com/api/contacts#delete-a-contact
+     */
+    public deleteContact(administration: Administration, contactId: string) {
+        return this.requestHandler.request<void>(`${administration.id}/contacts/${contactId}${format}`, {method: "DELETE"})
+    }
+
+    /**
+     * When updating a contact, you only need to provide the information you want to change. Attributes you don't provide in the request will not be updated. Optional attributes can be removed by setting them to an empty string value.
+     * @see https://developer.moneybird.com/api/contacts#update-a-contact
+     */
     public updateContact(contact: Contact, options: UpdateContactOptions) {
         return this.requestHandler.request<APIContact>(`${contact.administration_id}/contacts/${contact.id}${format}`, {
             method: "PATCH",
@@ -159,42 +311,54 @@ export class RESTManager {
         })
     }
 
-    public deleteContact(administration: Administration, contactId: string) {
-        return this.requestHandler.request<void>(`${administration.id}/contacts/${contactId}${format}`, {
-            method: "DELETE",
-            body: "{}"
-        })
+    /**
+     * Returns a paginated list of contacts in the administration.
+     *
+     * Searching for contacts can be done by providing the {@link ContactSearchOptions.query} parameter with search terms. The API searches for matches in the following contact fields:
+     * - `company_name`
+     * - `attention`
+     * - `firstname`
+     * - `lastname`
+     * - `address1`
+     * - `address2`
+     * - `zipcode`
+     * - `city`
+     * - `country`
+     * - `email`
+     * - `phone`
+     * - `customer_id`
+     * - `tax_number`
+     * - `chamber_of_commerce`
+     * - `bank_account`
+     * @see https://developer.moneybird.com/api/contacts#list-all-contacts
+     */
+    public getContacts(administration: Administration, options: ContactSearchOptions = {}) {
+        const query = Util.queryString(options);
+        return this.requestHandler.request<APIContact[]>(`${administration.id}/contacts${format}${query}`, {method: "GET"})
     }
 
-    public getContactPerson(contact: Contact, contactPersonId: string) {
-        return this.requestHandler.request<APIContactPerson>(`${contact.administration_id}/contacts/${contact.id}/contact_people/${contactPersonId}${format}`, {method: "GET"})
-    }
-
-    public addContactPerson(contact: Contact, options: ContactPersonOptions) {
-        return this.requestHandler.request<APIContactPerson>(`${contact.administration_id}/contacts/${contact.id}/contact_people${format}`, {
+    /**
+     * Creating a new contact in the administration requires at least a `company_name` or a `firstname` and `lastname`.
+     * @see https://developer.moneybird.com/api/contacts#create-a-new-contact
+     */
+    public addContact(administration: Administration, options: AddContactOptions) {
+        return this.requestHandler.request<APIContact>(`${administration.id}/contacts${format}`, {
             method: "POST",
-            body: JSON.stringify({contact_person: options})
+            body: JSON.stringify({contact: options})
         })
     }
 
-    public updateContactPerson(contactPerson: ContactPerson, options: ContactPersonOptions) {
-        return this.requestHandler.request<APIContactPerson>(`${contactPerson.administration_id}/contacts/${contactPerson.contact.id}/contact_people/${contactPerson.id}${format}`, {
-            method: "PATCH",
-            body: JSON.stringify({contact_person: options})
-        })
-    }
-
-    public deleteContactPerson(contact: Contact, contactPersonId: string) {
-        return this.requestHandler.request<void>(`${contact.administration.id}/contacts/${contact.id}/contact_people/${contactPersonId}${format}`, {
-            method: "DELETE",
-            body: "{}"
-        })
-    }
-
+//#endregion Contacts
+//#region Custom Fields
+    /**
+     * Custom fields are used to add extra information to entities in the administration. The [source]{@link CustomField.source} field defines for which entities the custom field can be used. The id of a custom field is required to add a value for a custom field to an entity.
+     * @see https://developer.moneybird.com/api/custom-fields#list-all-custom-fields
+     */
     public getCustomFields(administration: Administration) {
         return this.requestHandler.request<APICustomField[]>(`${administration.id}/custom_fields${format}`, {method: "GET"})
     }
-
+//#endregion Custom Fields
+    /** */
     public getDocumentStyles(administration: Administration) {
         return this.requestHandler.request<APIDocumentStyle[]>(`${administration.id}/document_styles${format}`, {method: "GET"})
     }
@@ -242,10 +406,7 @@ export class RESTManager {
     public deleteDocument(administration: Administration, documentType: DocumentEntityType, documentId: string, refresh_journal_entries?: boolean) {
         const query = refresh_journal_entries ? `?refresh_journal_entries=true` : "";
         const documentPath = Util.entityRestUrl(documentType);
-        return this.requestHandler.request<void>(`${administration.id}/${documentPath}/${documentId}${format}${query}`, {
-            method: "DELETE",
-            body: "{}"
-        })
+        return this.requestHandler.request<void>(`${administration.id}/${documentPath}/${documentId}${format}${query}`, {method: "DELETE"})
     }
 
 //#endregion Document
@@ -262,25 +423,27 @@ export class RESTManager {
     public deletePayment(entity: ExternalSalesInvoice | PurchaseInvoice | Receipt | SalesInvoice, paymentId: string) {
         const docType = Util.entityToEntityType(entity);
         const documentPath = Util.entityRestUrl(docType);
-        return this.requestHandler.request<void>(`${entity.administration_id}/${documentPath}/${entity.id}/payments/${paymentId}${format}`, {
-            method: "DELETE",
-            body: "{}"
-        })
+        return this.requestHandler.request<void>(`${entity.administration_id}/${documentPath}/${entity.id}/payments/${paymentId}${format}`, {method: "DELETE"})
     }
 
+    /**
+     * Deletes a note from the entity.
+     * @see https://developer.moneybird.com/api/contacts#destroys-note-from-entity
+     */
+    public deleteNote(entity: Contact | Document, noteId: string) {
+        const entityPath = Util.entityRestUrl(Util.entityToEntityType(entity));
+        return this.requestHandler.request<void>(`${entity.administration_id}/${entityPath}/${entity.id}/notes/${noteId}${format}`, {method: "DELETE"})
+    }
+
+    /**
+     * Adds a note to the entity.
+     * @see https://developer.moneybird.com/api/contacts#adds-note-to-entity
+     */
     public addNote(entity: Contact | Document, options: AddNoteOptions) {
         const entityPath = Util.entityRestUrl(Util.entityToEntityType(entity));
         return this.requestHandler.request<APINote>(`${entity.administration_id}/${entityPath}/${entity.id}/notes${format}`, {
             method: "POST",
             body: JSON.stringify({note: options})
-        })
-    }
-
-    public deleteNote(entity: Contact | Document, noteId: string) {
-        const entityPath = Util.entityRestUrl(Util.entityToEntityType(entity));
-        return this.requestHandler.request<void>(`${entity.administration_id}/${entityPath}/${entity.id}/notes/${noteId}${format}`, {
-            method: "DELETE",
-            body: "{}"
         })
     }
 
@@ -346,13 +509,10 @@ export class RESTManager {
     }
 
     public deleteLedgerAccount(administration: Administration, ledgerAccountId: string) {
-        return this.requestHandler.request<void>(`${administration.id}/ledger_accounts/${ledgerAccountId}${format}`, {
-            method: "DELETE",
-            body: "{}"
-        })
+        return this.requestHandler.request<void>(`${administration.id}/ledger_accounts/${ledgerAccountId}${format}`, {method: "DELETE"})
     }
 
-    //#region Reports
+//#region Reports
     /**
      * Get the assets report for the administration.
      * @see https://developer.moneybird.com/api/reports#assets-report
@@ -399,6 +559,15 @@ export class RESTManager {
     }
 
     /**
+     * Returns a debtors aging report for the specified administration.
+     * @see https://developer.moneybird.com/api/reports#debtors-aging-report
+     */
+    public getDebtorsAgingReport(administration: Administration, options?: PagedAgingReportOptions) {
+        const query = options === undefined ? "" : Util.queryString(options);
+        return this.requestHandler.request<APIDebtorsAgingReport>(`${administration.id}/reports/debtors_aging${format}${query}`, {method: "GET"})
+    }
+
+    /**
      * Returns an expenses-by-contact report for the specified administration.
      * @see https://developer.moneybird.com/api/reports#expenses-by-contact-report
      */
@@ -417,7 +586,7 @@ export class RESTManager {
     }
 
     /**
-     * Queue the export of an auditfile (XAF XML format) for the specified year. The auditfile will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * Queue the export of an auditfile (XAF XML format) for the specified year. The auditfile will be added to your [downloads]{@link https://developer.moneybird.com/api/downloads} when ready.
      * The administration must not have any ledger accounts with missing or duplicate account IDs, and the specified year must contain journal entries.
      * @param administration
      * @param year The year for which to generate the auditfile
@@ -431,7 +600,7 @@ export class RESTManager {
     }
 
     /**
-     * Queue the export of a brugstaat XML file for the specified year. The file will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * Queue the export of a brugstaat XML file for the specified year. The file will be added to your [downloads]{@link https://developer.moneybird.com/api/downloads} when ready.
      * All ledger accounts must have valid RGS taxonomy codes assigned.
      * @param administration
      * @param year The year for which to generate the auditfile
@@ -445,7 +614,7 @@ export class RESTManager {
     }
 
     /**
-     * Queue the export of ledger accounts (grootboekkaarten) to an Excel file for the specified year. This file contains all bookings and can be used for manual audits. The file will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * Queue the export of ledger accounts (grootboekkaarten) to an Excel file for the specified year. This file contains all bookings and can be used for manual audits. The file will be added to your [downloads]{@link https://developer.moneybird.com/api/downloads} when ready.
      * The specified year must contain journal entries.
      * @param administration
      * @param year The year for which to generate the auditfile

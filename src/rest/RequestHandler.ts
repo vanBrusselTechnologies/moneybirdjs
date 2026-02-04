@@ -79,9 +79,6 @@ export class RequestHandler {
             }
 
             const isOk = res.status === 200 || res.status === 201
-
-            if (!isOk) throw new Error(`non valid: ${res.status} ${JSON.stringify(res)}`)
-
             return {data: data as T, status: res.status, maxAge: 0, path, ok: isOk}
             //https://developer.moneybird.com/#responses
         } catch (e) {

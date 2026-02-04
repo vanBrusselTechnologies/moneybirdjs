@@ -30,7 +30,7 @@ export class FinancialMutation {
     public account_servicer_transaction_id: string | null;
     public payments: Payment[];
 
-    //todo ledger_account_bookings: FinancialMutationLedgerAccountBooking[]
+    // TODO: ledger_account_bookings: FinancialMutationLedgerAccountBooking[]
 
     constructor(public administration: Administration, data: APIFinancialMutation) {
         this.id = data.id;

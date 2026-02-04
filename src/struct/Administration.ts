@@ -6,6 +6,7 @@ import {
     Contact,
     CreditorsReport,
     CustomField,
+    DebtorsAgingReport,
     DebtorsReport,
     DocumentStyle,
     ExpensesByContactReport,
@@ -52,6 +53,8 @@ import {
     APISalesInvoice,
     APITypelessDocument,
     CashFlowReportOptions,
+    ContactFilterOptions,
+    ContactListIdsOptions,
     ContactSearchOptions,
     EntityType,
     ExternalSalesInvoiceSearchOptions,
@@ -60,6 +63,7 @@ import {
     Identifier,
     JournalDocumentSearchOptions,
     JournalEntriesReportOptions,
+    PagedAgingReportOptions,
     PagedReportOptions,
     ProfitLossReportOptions,
     PurchaseInvoiceSearchOptions,
@@ -100,54 +104,123 @@ export class Administration {
         if (data.period_locked_until) this.period_locked_until = new Date(data.period_locked_until);
     }
 
-    /**
-     * Returns all entities of entityType in the administration. The list contains the id and the version of the entity. Check if the version of the document is newer than the version you have stored locally.
-     * @param entityType
-     * @param filter
-     */
+    /** Returns all entities of {@link entityType} in the administration. The list contains the id and the version of the entity. Check if the version of the entity is newer than the version you have stored locally. */
     async listIdsAndVersions(entityType: EntityType, filter?: Filter) {
         return (await this.client.rest.synchronize(this, entityType, filter)).data;
     }
 
-    async listContactsByIds(ids: Array<string>) {
-        const {data} = await this.client.rest.listContactsByIds(this, ids)
-        return data.map((entry) => new Contact(this, entry))
-    }
+    // TODO: Assets
 
-    async getContacts(options: ContactSearchOptions = {}) {
-        const {data} = await this.client.rest.getContacts(this, options)
-        return data.map((entry) => new Contact(this, entry))
-    }
-
-    async getContact(contactId: string) {
-        const {data} = await this.client.rest.getContact(this, contactId)
-        return new Contact(this, data)
-    }
-
+//#region Contacts
+    /**
+     * Returns all information about a contact by the given customer id
+     * @see https://developer.moneybird.com/api/contacts#get-contact-by-customer-id
+     */
     async getContactByCustomerId(customerId: string) {
         const {data} = await this.client.rest.getContactByCustomerId(this, customerId)
         return new Contact(this, data)
     }
 
+    /**
+     * Returns a paginated list of all contacts in the administration.
+     * The {@link ContactFilterOptions.filter} argument allows you to filter the list of contacts.
+     * @see https://developer.moneybird.com/api/contacts#filter-contacts
+     */
+    async filterContacts(options?: ContactFilterOptions) {
+        const {data} = await this.client.rest.filterContacts(this, options)
+        return data.map((entry) => new Contact(this, entry))
+    }
+
+    /**
+     * Returns all contacts in the administration. The list contains the contact id and the version of the contact. Check if the version of the contact is newer than the version you have stored locally, use {@link listContactsByIds} for fetching contacts with the given ids.
+     * @see https://developer.moneybird.com/api/contacts#list-all-ids-and-versions
+     */
+    async listContactIdsAndVersions(options?: ContactListIdsOptions) {
+        return (await this.client.rest.listContactIdsAndVersions(this, options)).data;
+    }
+
+    /**
+     * Given a list of contact ids, returns the contact information belonging to the contacts. Returns a maximum of 100 contacts, even if more ids are provided.
+     * @see https://developer.moneybird.com/api/contacts#fetch-contacts-with-given-ids
+     */
+    async listContactsByIds(ids: Array<Identifier>) {
+        const {data} = await this.client.rest.getContactsByIds(this, ids)
+        return data.map((entry) => new Contact(this, entry))
+    }
+
+    /**
+     * Returns all information about a contact.
+     * @see https://developer.moneybird.com/api/contacts#get-contact
+     */
+    async getContact(contactId: Identifier, include_archived?: boolean) {
+        const {data} = await this.client.rest.getContact(this, contactId, include_archived)
+        return new Contact(this, data)
+    }
+
+    /**
+     * Deletes a contact.
+     * @see https://developer.moneybird.com/api/contacts#delete-a-contact
+     */
+    async deleteContact(contactId: string) {
+        await this.client.rest.deleteContact(this, contactId)
+    }
+
+    /**
+     * Returns a paginated list of contacts in the administration.
+     *
+     * Searching for contacts can be done by providing the {@link ContactSearchOptions.query} parameter with search terms. The API searches for matches in the following contact fields:
+     * - `company_name`
+     * - `attention`
+     * - `firstname`
+     * - `lastname`
+     * - `address1`
+     * - `address2`
+     * - `zipcode`
+     * - `city`
+     * - `country`
+     * - `email`
+     * - `phone`
+     * - `customer_id`
+     * - `tax_number`
+     * - `chamber_of_commerce`
+     * - `bank_account`
+     * @see https://developer.moneybird.com/api/contacts#list-all-contacts
+     */
+    async getContacts(options?: ContactSearchOptions) {
+        const {data} = await this.client.rest.getContacts(this, options)
+        return data.map((entry) => new Contact(this, entry))
+    }
+
+    /**
+     * Creating a new contact in the administration requires at least a `company_name` or a `firstname` and `lastname`.
+     * @see https://developer.moneybird.com/api/contacts#create-a-new-contact
+     */
     async addContact(options: AddContactOptions) {
         const {data} = await this.client.rest.addContact(this, options)
         return new Contact(this, data)
     }
 
-    /** Deletes the contact by contactId, or archives it when deleting was not possible. */
-    async deleteContact(contactId: string) {
-        await this.client.rest.deleteContact(this, contactId)
-    }
-
+//#endregion Contacts
+//#region Custom Fields
+    /**
+     * Custom fields are used to add extra information to entities in the administration. The [source]{@link CustomField.source} field defines for which entities the custom field can be used. The id of a custom field is required to add a value for a custom field to an entity.
+     * @see https://developer.moneybird.com/api/custom-fields#list-all-custom-fields
+     */
     async getCustomFields() {
         const {data} = await this.client.rest.getCustomFields(this)
-        return data.map((entry) => new CustomField(this, entry))
+        return data.map((entry) => new CustomField(entry))
     }
+//#endregion Custom Fields
 
+    // TODO: Customer contact portal
+
+    /** */
     async getDocumentStyles() {
         const {data} = await this.client.rest.getDocumentStyles(this)
         return data.map((entry) => new DocumentStyle(this, entry))
     }
+
+    // TODO: Downloads
 
     async listGeneralDocumentsByIds(ids: Array<string>) {
         const {data} = await this.client.rest.listDocumentsByIds<APIGeneralDocument>(this, 'generalDocument', ids);
@@ -269,7 +342,7 @@ export class Administration {
         await this.client.rest.deleteDocument(this, 'typelessDocument', typelessDocumentId, refresh_journal_entries)
     }
 
-    //todo: Estimates
+    // TODO: Estimates
 
     async listExternalSalesInvoicesByIds(ids: Array<string>) {
         const {data} = await this.client.rest.listDocumentsByIds<APIExternalSalesInvoice>(this, 'externalSalesInvoice', ids);
@@ -291,7 +364,7 @@ export class Administration {
         return new ExternalSalesInvoice(this, data)
     }
 
-    /* todo: https://developer.moneybird.com/api/external_sales_invoices/#post_external_sales_invoices_attachment */
+    /* TODO: https://developer.moneybird.com/api/external_sales_invoices/#post_external_sales_invoices_attachment */
 
     async deleteExternalSalesInvoice(externalSalesInvoiceId: string, refresh_journal_entries?: boolean) {
         await this.client.rest.deleteDocument(this, 'externalSalesInvoice', externalSalesInvoiceId, refresh_journal_entries)
@@ -303,7 +376,7 @@ export class Administration {
         return data.map((entry) => new FinancialAccount(this, entry))
     }
 
-    /** When requesting huge number of mutations, use the Sync API: {@link listIdsAndVersions()} + {@link listFinancialMutationsByIds()} */
+    /** When requesting huge number of mutations, use the Sync API: {@link listIdsAndVersions} + {@link listFinancialMutationsByIds} */
     async getFinancialMutations(filter: Filter) {
         const {data} = await this.client.rest.getFinancialMutations(this, filter)
         return data.map((entry) => new FinancialMutation(this, entry))
@@ -320,8 +393,8 @@ export class Administration {
         return new FinancialMutation(this, data)
     }
 
-    //todo: Financial Statements
-    //todo: Identities
+    // TODO: Financial Statements
+    // TODO: Identities
 
     async getLedgerAccounts() {
         const {data} = await this.client.rest.getLedgerAccounts(this)
@@ -351,10 +424,10 @@ export class Administration {
         return new Payment(data)
     }
 
-    //todo: Products
-    //todo: Projects
-    //todo: Purchase transactions
-    //todo: Recurring Sales Invoices
+    // TODO: Products
+    // TODO: Projects
+    // TODO: Purchase transactions
+    // TODO: Recurring Sales Invoices
 //#region Reports
     /**
      * Get the assets report for the administration.
@@ -402,6 +475,15 @@ export class Administration {
     }
 
     /**
+     * Returns a debtors aging report for the specified administration.
+     * @see https://developer.moneybird.com/api/reports#debtors-aging-report
+     */
+    async getDebtorsAgingReport(options?: PagedAgingReportOptions) {
+        const {data} = await this.client.rest.getDebtorsAgingReport(this, options)
+        return new DebtorsAgingReport(data)
+    }
+
+    /**
      * Returns an expenses-by-contact report for the specified administration.
      * @see https://developer.moneybird.com/api/reports#expenses-by-contact-report
      */
@@ -420,7 +502,7 @@ export class Administration {
     }
 
     /**
-     * Queue the export of an auditfile (XAF XML format) for the specified year. The auditfile will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * Queue the export of an auditfile (XAF XML format) for the specified year. The auditfile will be added to your [downloads]{@link https://developer.moneybird.com/api/downloads} when ready.
      * The administration must not have any ledger accounts with missing or duplicate account IDs, and the specified year must contain journal entries.
      * @param year The year for which to generate the auditfile
      * @see https://developer.moneybird.com/api/auditfile#export-auditfile
@@ -430,7 +512,7 @@ export class Administration {
     }
 
     /**
-     * Queue the export of a brugstaat XML file for the specified year. The file will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * Queue the export of a brugstaat XML file for the specified year. The file will be added to your [downloads]{@link https://developer.moneybird.com/api/downloads} when ready.
      * All ledger accounts must have valid RGS taxonomy codes assigned.
      * @param year The year for which to generate the auditfile
      * @see https://developer.moneybird.com/api/brugstaat#export-brugstaat
@@ -440,7 +522,7 @@ export class Administration {
     }
 
     /**
-     * Queue the export of ledger accounts (grootboekkaarten) to an Excel file for the specified year. This file contains all bookings and can be used for manual audits. The file will be added to your {@link https://developer.moneybird.com/api/downloads|downloads} when ready.
+     * Queue the export of ledger accounts (grootboekkaarten) to an Excel file for the specified year. This file contains all bookings and can be used for manual audits. The file will be added to your [downloads]{@link https://developer.moneybird.com/api/downloads} when ready.
      * The specified year must contain journal entries.
      * @param year The year for which to generate the auditfile
      * @see https://developer.moneybird.com/api/ledger_accounts#export-ledger-accounts
@@ -559,8 +641,8 @@ export class Administration {
         await this.client.rest.deleteDocument(this, 'salesInvoice', salesInvoiceId, refresh_journal_entries)
     }
 
-    //todo: Subscription templates
-    //todo: Subscriptions
+    // TODO: Subscription templates
+    // TODO: Subscriptions
 
     /** Returns a paginated list of all available tax rates for the administration */
     async getTaxRates(filter: TaxRateSearchOptions = {tax_rate_type: 'all'}) {
@@ -568,7 +650,7 @@ export class Administration {
         return data.map((entry) => new TaxRate(entry))
     }
 
-    //todo: Time entries
+    // TODO: Time entries
 
     /** Returns a list of users within the administration. */
     async getUsers(options: UserSearchOptions = {}) {
@@ -585,7 +667,7 @@ export class Administration {
         return new Verifications(data)
     }
 
-    //todo: Webhooks
+    // TODO: Webhooks
 
     /**
      * Returns a list of all the workflows of an administration.

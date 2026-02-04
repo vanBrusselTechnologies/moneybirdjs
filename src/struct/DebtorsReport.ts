@@ -2,9 +2,9 @@ import {ReportContact} from ".";
 import {APIDebtorsReport} from "../types";
 
 export class DebtorsReport {
-    public creditors: ReportContact[];
+    public debtors: ReportContact[];
 
     constructor(data: APIDebtorsReport) {
-        this.creditors = data.debtors.map(debtor => new ReportContact(debtor));
+        this.debtors = data.debtors.map(debtor => new ReportContact(debtor));
     }
 }
