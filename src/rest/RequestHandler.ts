@@ -28,7 +28,7 @@ export class RequestHandler {
             }
             const res = await fetch(`${Constants.APIBaseURL}${path}`, {
                 method: options.method, headers: headers,
-                body: options.method !== 'GET' ? options.body : undefined
+                body: options.method !== 'GET' ? options.body : undefined,
             })
 
             if (res.status >= 500 && retries < this.rateLimit) {

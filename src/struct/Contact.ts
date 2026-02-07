@@ -85,7 +85,7 @@ export class Contact {
      * Returns all information about a contact person.
      * @see https://developer.moneybird.com/api/contacts#get-contact-person
      */
-    async getContactPerson(contactPersonId: string) {
+    async getContactPerson(contactPersonId: Identifier) {
         const {data} = await this.administration.client.rest.getContactPerson(this, contactPersonId)
         return new ContactPerson(this, data);
     }
@@ -94,7 +94,7 @@ export class Contact {
      * Deletes a contact person.
      * @see https://developer.moneybird.com/api/contacts#delete-a-contact-person
      */
-    async deleteContactPerson(contactPersonId: string) {
+    async deleteContactPerson(contactPersonId: Identifier) {
         await this.administration.client.rest.deleteContactPerson(this, contactPersonId)
         this.contact_people = this.contact_people.filter(p => p.id !== contactPersonId)
     }

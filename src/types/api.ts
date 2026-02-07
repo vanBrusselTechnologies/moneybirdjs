@@ -2,6 +2,7 @@ import {
     CreditCardType,
     CustomFieldSource,
     DeliveryMethod,
+    DownloadType,
     Identifier,
     NoteEntityType,
     Period,
@@ -9,6 +10,7 @@ import {
     SiIdentifierType,
     ToDoType
 } from "./lib";
+import {AddressPosition, LogoPosition, PaperSize} from "./lib_documentStyle";
 
 export interface APIAdministration {
     id: Identifier
@@ -163,19 +165,19 @@ export interface APIAdditionalCharge {
 }
 
 export interface APIDocumentStyle {
-    id: string
-    administration_id: string
+    id: Identifier
+    administration_id: Identifier
     name: string
-    identity_id: string
+    identity_id: Identifier
     default: boolean
     logo_hash: string
     logo_container_full_width: boolean
     logo_display_width: number
-    logo_position: string
+    logo_position: LogoPosition
     background_hash: string
-    paper_size: string
-    address_position: string
-    font_size: 9 | 10 | 11 | 12
+    paper_size: PaperSize
+    address_position: AddressPosition
+    font_size: number
     font_family: string
     print_on_stationery: boolean
     custom_css: string
@@ -194,6 +196,18 @@ export interface APIDocumentField {
     label?: boolean
     bold?: boolean
     italic?: boolean
+}
+
+export interface APIDownload {
+    id: Identifier
+    user_id: Identifier | null
+    download_type: DownloadType
+    filename: string
+    content_type: string
+    failed: boolean
+    downloaded: boolean
+    created_at: string
+    updated_at: string
 }
 
 export type APIDocument =

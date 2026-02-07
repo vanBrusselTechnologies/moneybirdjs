@@ -5,6 +5,8 @@ import {APILedgerAccountAllowedDocumentTypes, APILedgerAccountType} from "./api"
 export * from "./lib_contact";
 export * from "./lib_customField";
 export * from "./lib_documents";
+export * from "./lib_documentStyle";
+export * from "./lib_download";
 export * from "./lib_financialMutation";
 export * from "./lib_note";
 export * from "./lib_reports";
@@ -69,7 +71,7 @@ export type BookingType =
     | 'VatDocument';
 export type RequestOptions = {
     /* The request method */
-    method: 'GET' | 'DELETE' | 'PATCH',
+    method: 'GET' | 'DELETE' | 'PATCH' | 'POST',
     body?: undefined,
     additionalHeaders?: { 'content-type'?: string, [key: string]: any }
 } | {
@@ -95,6 +97,7 @@ export interface Filter {
 
 export interface PagedOptions {
     page?: number
+    /** min: 1, max: 100 */
     per_page?: number
 }
 

@@ -9,6 +9,7 @@ import {
     DebtorsAgingReport,
     DebtorsReport,
     DocumentStyle,
+    Download,
     ExpensesByContactReport,
     ExpensesByProjectReport,
     ExternalSalesInvoice,
@@ -56,6 +57,7 @@ import {
     ContactFilterOptions,
     ContactListIdsOptions,
     ContactSearchOptions,
+    DownloadFilterOptions,
     EntityType,
     ExternalSalesInvoiceSearchOptions,
     Filter,
@@ -161,7 +163,7 @@ export class Administration {
      * Deletes a contact.
      * @see https://developer.moneybird.com/api/contacts#delete-a-contact
      */
-    async deleteContact(contactId: string) {
+    async deleteContact(contactId: Identifier) {
         await this.client.rest.deleteContact(this, contactId)
     }
 
@@ -210,18 +212,37 @@ export class Administration {
         const {data} = await this.client.rest.getCustomFields(this)
         return data.map((entry) => new CustomField(entry))
     }
+
 //#endregion Custom Fields
 
     // TODO: Customer contact portal
 
-    /** */
+//#region Document Styles
+    /**
+     * Returns a list of all document styles.
+     * @see https://developer.moneybird.com/api/document-styles#list-all-document-styles
+     */
     async getDocumentStyles() {
         const {data} = await this.client.rest.getDocumentStyles(this)
         return data.map((entry) => new DocumentStyle(this, entry))
     }
 
-    // TODO: Downloads
+//#endregion Document Styles
+//#region Downloads
+    /**
+     * Returns a paginated list of all downloads in the administration.
+     *
+     * Only downloads that the authenticated user has permission to access will be returned, based on the download type and the user's permissions within the administration.
+     * @see https://developer.moneybird.com/api/downloads#list-all-downloads
+     */
+    async getDownloads(options?: DownloadFilterOptions) {
+        const {data} = await this.client.rest.getDownloads(this, options)
+        return data.map((entry) => new Download(this, entry))
+    }
 
+//#endregion Downloads
+
+    /** */
     async listGeneralDocumentsByIds(ids: Array<string>) {
         const {data} = await this.client.rest.listDocumentsByIds<APIGeneralDocument>(this, 'generalDocument', ids);
         return data.map((entry) => new GeneralDocument(this, entry))

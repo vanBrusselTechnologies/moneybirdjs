@@ -14,6 +14,7 @@ A wrapper for the Moneybird API
     - Purchase Invoices
     - Receipts
     - Typeless documents
+- Downloads
 - External Sales Invoices*
 - Financial Accounts
 - Financial Mutations

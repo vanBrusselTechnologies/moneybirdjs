@@ -31,6 +31,7 @@ import {
     APIDebtorsReport,
     APIDocument,
     APIDocumentStyle,
+    APIDownload,
     APIExpensesByContactReport,
     APIExpensesByProjectReport,
     APIFinancialAccount,
@@ -61,6 +62,7 @@ import {
     DocumentEntityType,
     DocumentSearchOptions,
     DocumentUpdateOptions,
+    DownloadFilterOptions,
     EntityType,
     Filter,
     FinancialMutationLinkBookingOptions,
@@ -179,7 +181,7 @@ export class RESTManager {
      * Returns all information about a contact person.
      * @see https://developer.moneybird.com/api/contacts#get-contact-person
      */
-    public getContactPerson(contact: Contact, contactPersonId: string) {
+    public getContactPerson(contact: Contact, contactPersonId: Identifier) {
         return this.requestHandler.request<APIContactPerson>(`${contact.administration_id}/contacts/${contact.id}/contact_people/${contactPersonId}${format}`, {method: "GET"})
     }
 
@@ -187,7 +189,7 @@ export class RESTManager {
      * Deletes a contact person.
      * @see https://developer.moneybird.com/api/contacts#delete-a-contact-person
      */
-    public deleteContactPerson(contact: Contact, contactPersonId: string) {
+    public deleteContactPerson(contact: Contact, contactPersonId: Identifier) {
         return this.requestHandler.request<void>(`${contact.administration.id}/contacts/${contact.id}/contact_people/${contactPersonId}${format}`, {method: "DELETE"})
     }
 
@@ -296,7 +298,7 @@ export class RESTManager {
      * Deletes a contact.
      * @see https://developer.moneybird.com/api/contacts#delete-a-contact
      */
-    public deleteContact(administration: Administration, contactId: string) {
+    public deleteContact(administration: Administration, contactId: Identifier) {
         return this.requestHandler.request<void>(`${administration.id}/contacts/${contactId}${format}`, {method: "DELETE"})
     }
 
@@ -357,12 +359,39 @@ export class RESTManager {
     public getCustomFields(administration: Administration) {
         return this.requestHandler.request<APICustomField[]>(`${administration.id}/custom_fields${format}`, {method: "GET"})
     }
+
 //#endregion Custom Fields
-    /** */
+//#region Document Styles
+    /**
+     * Returns a list of all document styles.
+     * @see https://developer.moneybird.com/api/document-styles#list-all-document-styles
+     */
     public getDocumentStyles(administration: Administration) {
         return this.requestHandler.request<APIDocumentStyle[]>(`${administration.id}/document_styles${format}`, {method: "GET"})
     }
 
+//#endregion Document Styles
+//#region Downloads
+    /**
+     * Downloads the actual file. The user must have the appropriate permissions to access the download based on its type.
+     * @see https://developer.moneybird.com/api/downloads#download-a-file
+     */
+    public downloadFile(administration: Administration, id: Identifier) {
+        return this.requestHandler.request<Buffer>(`${administration.id}/downloads/${id}/download${format}`, {method: "POST"})
+    }
+
+    /**
+     * Returns a paginated list of all downloads in the administration.
+     *
+     * Only downloads that the authenticated user has permission to access will be returned, based on the download type and the user's permissions within the administration.
+     * @see https://developer.moneybird.com/api/downloads#list-all-downloads
+     */
+    public getDownloads(administration: Administration, options?: DownloadFilterOptions) {
+        const query = options === undefined ? '' : Util.queryString(options);
+        return this.requestHandler.request<APIDownload[]>(`${administration.id}/downloads${format}${query}`, {method: "GET"})
+    }
+
+//#endregion Downloads
 //#region Document
     /** */
     public listDocumentsByIds<T extends APIDocument>(administration: Administration, documentType: DocumentEntityType, ids: Array<string>) {

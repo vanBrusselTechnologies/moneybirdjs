@@ -1,20 +1,21 @@
 import {Administration} from ".";
-import {APIDocumentField, APIDocumentStyle} from "../types";
+import {AddressPosition, APIDocumentField, APIDocumentStyle, Identifier, LogoPosition, PaperSize} from "../types";
 
+/** Document styles are used to define the layout of documents, like invoices and estimates. You can have multiple document styles for different purposes. */
 export class DocumentStyle {
-    id: string;
-    administration_id: string;
+    id: Identifier;
+    administration_id: Identifier;
     name: string;
-    identity_id: string;
+    identity_id: Identifier;
     default: boolean;
     logo_hash: string;
     logo_container_full_width: boolean;
     logo_display_width: number;
-    logo_position: string;
+    logo_position: LogoPosition;
     background_hash: string;
-    paper_size: string;
-    address_position: string;
-    font_size: 9 | 10 | 11 | 12;
+    paper_size: PaperSize;
+    address_position: AddressPosition;
+    font_size: number;
     font_family: string;
     print_on_stationery: boolean;
     custom_css: string;
